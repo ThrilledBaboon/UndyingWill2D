@@ -38,30 +38,6 @@ namespace UndyingWill2D.Controllers
         }
         private void HandleInput() 
         {
-            KeyboardState keyboardState = Keyboard.GetState();
-            MouseState mouseState = Mouse.GetState();
-            //WASD
-            if (keyboardState.IsKeyDown(Keys.W)) 
-            {
-                OnMove(_moveDirection);
-            }
-            if (keyboardState.IsKeyDown(Keys.A)) 
-            {
-                OnMove(_moveDirection);
-            }
-            if (keyboardState.IsKeyDown(Keys.S)) 
-            {
-                OnMove(_moveDirection);
-            }
-            if (keyboardState.IsKeyDown(Keys.D)) 
-            {
-                OnMove(_moveDirection);
-            }
-            //Mouse
-            if (mouseState.LeftButton == ButtonState.Pressed) { OnAttack(mouseState); }
-            //Other Actions
-            if (keyboardState.IsKeyDown(Keys.R)) { OnRoll(keyboardState); }
-            if (keyboardState.IsKeyDown(Keys.LeftShift)) {OnBlock(keyboardState, mouseState); }
 
         }
         private void OnMove(Vector2 moveDirection)

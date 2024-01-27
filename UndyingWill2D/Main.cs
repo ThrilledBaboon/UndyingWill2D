@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Net.Security;
 
 namespace UndyingWill2D
 {
@@ -19,6 +20,7 @@ namespace UndyingWill2D
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            Level = new Level();
 
             base.Initialize();
         }
@@ -36,6 +38,7 @@ namespace UndyingWill2D
                 Exit();
 
             // TODO: Add your update logic here
+            Player.Update();
 
             base.Update(gameTime);
         }
