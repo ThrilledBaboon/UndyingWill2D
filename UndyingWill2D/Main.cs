@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Net.Security;
+using UndyingWill2D.Managers;
 
 namespace UndyingWill2D
 {
@@ -9,6 +10,9 @@ namespace UndyingWill2D
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
+        private LevelManager _level;
+        Texture2D Player;
+        Texture2D Enemy;
 
         public Main()
         {
@@ -20,7 +24,8 @@ namespace UndyingWill2D
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            Level = new Level();
+            LevelManager _level = new LevelManager();
+            //_level.Initialise();
 
             base.Initialize();
         }
@@ -28,7 +33,8 @@ namespace UndyingWill2D
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-
+            Player = Content.Load<Texture2D>("PlayerSprite");
+            Enemy = Content.Load<Texture2D>("SkeletonSprite");
             // TODO: use this.Content to load your game content here
         }
 
@@ -38,7 +44,7 @@ namespace UndyingWill2D
                 Exit();
 
             // TODO: Add your update logic here
-            Player.Update();
+            //_level.Update();
 
             base.Update(gameTime);
         }
@@ -48,6 +54,10 @@ namespace UndyingWill2D
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
+            _spriteBatch.Begin();
+            _spriteBatch.Draw(Player, new Vector2(100, 100), Color.White);
+            _spriteBatch.Draw(Enemy, new Vector2(200, 200), Color.White);
+            _spriteBatch.End(); 
 
             base.Draw(gameTime);
         }

@@ -10,13 +10,13 @@ using Microsoft.Xna.Framework.Input;
 
 namespace UndyingWill2D.Controllers
 {
-    internal class EntityController
+    public class EntityController
     {
         //Fields
-        private int _health;
-        private bool _isAlive;
-        private Vector2 _moveDirection;
-        private int _moveSpeed;
+        private protected int _health;
+        private protected bool _isAlive;
+        private protected Vector2 _moveDirection;
+        private protected int _moveSpeed;
 
         //Property
         public int Health { get { return _health; } set { _health = value; } }
@@ -28,6 +28,7 @@ namespace UndyingWill2D.Controllers
         public void Update()
         {
             HandleInput();
+            Draw();
         }
         public void Draw()
         {
@@ -36,23 +37,20 @@ namespace UndyingWill2D.Controllers
 
             }
         }
-        private void HandleInput() 
+
+        public virtual void HandleInput() 
         {
 
         }
-        private void OnMove(Vector2 moveDirection)
+        public void OnMove(Vector2 moveDirection)
         {
 
         }
-        private void OnAttack(MouseState mouse)
+        public void OnAttack(MouseState mouse)
         {
 
         }
-        private void OnRoll(KeyboardState keyboardState)
-        {
-
-        }
-        private void OnBlock()
+        public void OnStun()
         {
 
         }

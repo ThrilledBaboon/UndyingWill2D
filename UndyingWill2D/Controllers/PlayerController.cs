@@ -9,15 +9,15 @@ using Microsoft.Xna.Framework.Input;
 
 namespace UndyingWill2D.Controllers
 {
-    internal class PlayerController : EntityController
+    public class PlayerController : EntityController
     {
         //Fields
         private int _stamina;
         //Property
-        public int Stamina { get { return _stamina; } set { _stamina = value; } };
+        public int Stamina { get { return _stamina; } set { _stamina = value; } }
         public PlayerController() { }
 
-        private override void HandleInput()
+        public override void HandleInput()
         {
             KeyboardState keyboardState = Keyboard.GetState();
             MouseState mouseState = Mouse.GetState();
@@ -44,4 +44,15 @@ namespace UndyingWill2D.Controllers
             if (keyboardState.IsKeyDown(Keys.R)) { OnRoll(keyboardState); }
             if (keyboardState.IsKeyDown(Keys.LeftShift)) { OnBlock(keyboardState, mouseState); }
         }
+
+        public void OnRoll(KeyboardState keyboardState)
+        {
+
+        }
+
+        public void OnBlock(KeyboardState keyboardState, MouseState mouseState)
+        {
+
+        }
+    }
 }

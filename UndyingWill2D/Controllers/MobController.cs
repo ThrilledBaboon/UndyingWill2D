@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace UndyingWill2D.Controllers
 {
-    internal class MobController : EntityController
+    public class MobController : EntityController
     {
 
     }
