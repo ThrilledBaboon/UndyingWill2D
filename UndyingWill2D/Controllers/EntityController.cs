@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection.Metadata;
 using System.Text;
@@ -8,6 +9,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using UndyingWill2D.Managers;
 
 namespace UndyingWill2D.Controllers
 {
@@ -16,6 +18,7 @@ namespace UndyingWill2D.Controllers
         public Texture2D texture;
         public  Vector2 position;
         public ContentManager contentManager;
+        AnimationManager _animationManager;
 
         //Fields
         private protected int _health;
@@ -39,15 +42,18 @@ namespace UndyingWill2D.Controllers
         public void Update()
         {
             HandleInput();
-            //Draw();
+            _animationManager.Update();
         }
 
         public void LoadContent()
         {
             texture = contentManager.Load<Texture2D>("PlayerAnimation");
+            _animationManager = new(2, 2, new Vector2(32, 32));
+            _animationManager.GetFrame();
         }
-        public void Draw()
+        public void Draw(SpriteBatch spriteBatch)
         {
+            spriteBatch.Draw(texture, Rectangle, _animationManager.GetFrame(), Color.White);
             if (_isAlive)
             {
 
@@ -58,9 +64,15 @@ namespace UndyingWill2D.Controllers
         {
 
         }
-        public void OnMove(Vector2 moveDirection)
+        public void OnMove(Vector2 moveDirection, float moveSpeed)
         {
-            position += moveDirection;
+            if (moveDirection != Vector2.Zero)
+            {
+                moveDirection.Normalize();
+            }
+            Vector2 moveVelocity = moveDirection * moveSpeed;
+            position += moveVelocity;
+            Debug.WriteLine(moveVelocity.ToString());
         }
         public void OnAttack(MouseState mouse)
         {

@@ -27,26 +27,26 @@ namespace UndyingWill2D.Controllers
         {
             KeyboardState keyboardState = Keyboard.GetState();
             MouseState mouseState = Mouse.GetState();
-            _moveDirection = new Vector2(0, 0);
+            _moveDirection = Vector2.Zero;
             if (keyboardState.IsKeyDown(Keys.W))
             {
-                _moveDirection.Y = -_moveSpeed;
-                OnMove(_moveDirection);
+                _moveDirection.Y = -1;
+                OnMove(_moveDirection, _moveSpeed);
             }
             if (keyboardState.IsKeyDown(Keys.A))
             {
-                _moveDirection.X = -_moveSpeed;
-                OnMove(_moveDirection);
+                _moveDirection.X = -1;
+                OnMove(_moveDirection, _moveSpeed);
             }
             if (keyboardState.IsKeyDown(Keys.S))
             {
-                _moveDirection.Y = _moveSpeed;
-                OnMove(_moveDirection);
+                _moveDirection.Y = 1;
+                OnMove(_moveDirection, _moveSpeed);
             }
             if (keyboardState.IsKeyDown(Keys.D))
             {
-                _moveDirection.X = _moveSpeed;
-                OnMove(_moveDirection);
+                _moveDirection.X = 1;
+                OnMove(_moveDirection, _moveSpeed);
             }
             if (mouseState.LeftButton == ButtonState.Pressed) 
             {
@@ -60,7 +60,7 @@ namespace UndyingWill2D.Controllers
             if (keyboardState.IsKeyDown(Keys.R))
             {
                 _isRPressed = false;
-                OnRoll(_moveDirection);
+                OnDash(_moveDirection);
             }
             if (keyboardState.IsKeyDown(Keys.LeftShift)) 
             {
@@ -68,7 +68,7 @@ namespace UndyingWill2D.Controllers
             }
         }
 
-        public void OnRoll(Vector2 _moveDirection)
+        public void OnDash(Vector2 _moveDirection)
         {
 
         }
