@@ -18,12 +18,13 @@ namespace UndyingWill2D.Controllers
         AnimationManager _animationManager;
 
         //Fields
-        protected int _health;
-        protected bool _isAlive;
+        int _health;
+        bool _isAlive;
         protected Vector2 _moveDirection;
         protected int _moveSpeed;
-        private bool _isMoving;
+        bool _isMoving;
         //Property
+        public AnimationManager AnimationManager { get { return _animationManager; } }
         public bool IsMoving { get { return _isMoving; } set { _isMoving = value; } }
         public int Health { get {return _health;} set {_health = value;}}
         public bool IsAlive {get {return _isAlive;} set {_isAlive = value;}}
@@ -57,7 +58,7 @@ namespace UndyingWill2D.Controllers
         {
 
         }
-        public void OnMove(Vector2 moveDirection, float moveSpeed)
+        public virtual void OnMove(Vector2 moveDirection, float moveSpeed)
         {
             if (moveDirection == Vector2.Zero) { IsMoving = false; }
             else { IsMoving = true; }

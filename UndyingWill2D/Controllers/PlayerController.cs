@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using UndyingWill2D.Managers;
 
 namespace UndyingWill2D.Controllers
 {
@@ -62,6 +63,20 @@ namespace UndyingWill2D.Controllers
                 OnBlock(mouseState); 
             }
             OnMove(_moveDirection, _moveSpeed);
+        }
+
+        public override void OnMove(Vector2 moveDirection, float moveSpeed)
+        {
+            if (moveDirection == Vector2.Zero) { IsMoving = false; }
+            else { IsMoving = true; }
+            _animationManager.Update(IsMoving);
+            if (moveDirection != Vector2.Zero)
+            {
+                moveDirection.Normalize();
+            }
+            Vector2 moveVelocity = moveDirection * moveSpeed;
+            Debug.WriteLine(moveVelocity);
+            _position += moveVelocity;
         }
 
         public void OnDash(Vector2 _moveDirection)
