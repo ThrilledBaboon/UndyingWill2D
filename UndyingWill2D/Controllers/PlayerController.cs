@@ -62,7 +62,6 @@ namespace UndyingWill2D.Controllers
                 OnBlock(mouseState); 
             }
             OnMove(_moveDirection, _moveSpeed);
-            _isMoving = false;
         }
 
         public void OnDash(Vector2 _moveDirection)

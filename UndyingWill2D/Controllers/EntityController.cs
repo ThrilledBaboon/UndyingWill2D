@@ -36,7 +36,6 @@ namespace UndyingWill2D.Controllers
         {
             HandleInput();
             Debug.WriteLine(_isMoving);
-            _animationManager.Update(_isMoving);
         }
 
         public override void LoadContent()
@@ -60,7 +59,9 @@ namespace UndyingWill2D.Controllers
         }
         public void OnMove(Vector2 moveDirection, float moveSpeed)
         {
-            _isMoving= true;
+            if (moveDirection == Vector2.Zero) { IsMoving = false; }
+            else { IsMoving = true; }
+            _animationManager.Update(IsMoving);
             if (moveDirection != Vector2.Zero)
             {
                 moveDirection.Normalize();
