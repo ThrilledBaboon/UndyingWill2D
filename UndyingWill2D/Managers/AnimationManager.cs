@@ -18,7 +18,7 @@ namespace UndyingWill2D.Managers
 
         int _frameCount;
         int _currentFrame;
-        int _animationCount;
+        int _animationInterval;
 
         int _rowPosition;
         int _columnPosition;
@@ -31,7 +31,7 @@ namespace UndyingWill2D.Managers
 
             _frameCount = 0;
             _currentFrame = 0;
-            _animationCount = 15;
+            _animationInterval = 15;
 
             _rowPosition = 0;
             _columnPosition = 1;
@@ -39,7 +39,7 @@ namespace UndyingWill2D.Managers
         public void Update()
         {
             _frameCount++;
-            if (_frameCount > _animationCount) 
+            if (_frameCount > _animationInterval) 
             {
                 _frameCount = 0;
                 NewFrame();
@@ -52,13 +52,20 @@ namespace UndyingWill2D.Managers
             _columnPosition++;
             if (_currentFrame >= _numberOfFrames)
             {
-                _frameCount = 0;
+                ResetAnimation();
             }
             if (_columnPosition >= _numberOfColumns)
             {
                 _columnPosition = 0;
                 _rowPosition++;
             }
+        }
+
+        private void ResetAnimation()
+        {
+            _frameCount = 0;
+            _columnPosition = 1;
+            _rowPosition = 0;
         }
 
         public Microsoft.Xna.Framework.Rectangle GetFrame()

@@ -28,7 +28,6 @@ namespace UndyingWill2D.Controllers
             KeyboardState keyboardState = Keyboard.GetState();
             MouseState mouseState = Mouse.GetState();
             _moveDirection = new Vector2(0, 0);
-            //WASD
             if (keyboardState.IsKeyDown(Keys.W))
             {
                 _moveDirection.Y = -_moveSpeed;
@@ -49,12 +48,10 @@ namespace UndyingWill2D.Controllers
                 _moveDirection.X = _moveSpeed;
                 OnMove(_moveDirection);
             }
-            //Mouse
             if (mouseState.LeftButton == ButtonState.Pressed) 
             {
                 OnAttack(mouseState); 
             }
-            //Other Actions
             if (!_isRPressed && keyboardState.IsKeyDown(Keys.R)) 
             {
                 _isRPressed = true;
