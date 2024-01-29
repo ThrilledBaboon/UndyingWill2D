@@ -60,7 +60,7 @@ namespace UndyingWill2D.Controllers
         }
         public void OnMove(Vector2 moveDirection)
         {
-
+            position += moveDirection;
         }
         public void OnAttack(MouseState mouse)
         {
