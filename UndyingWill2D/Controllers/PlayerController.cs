@@ -15,12 +15,12 @@ namespace UndyingWill2D.Controllers
     public class PlayerController : EntityController
     {
         //Fields
-        private new float _moveSpeed = 2.5f;
-        private int _stamina;
-        private bool _isRPressed;
+        new float _moveSpeed = 2.5f;
+        int _stamina;
+        bool _isRPressed;
         //Property
         public int Stamina { get { return _stamina; } set { _stamina = value; } }
-        public PlayerController(Texture2D texture, Vector2 positions, ContentManager contentManager) : base(texture, positions, contentManager)
+        public PlayerController(Texture2D texture, int scale, Vector2 positions, ContentManager contentManager) : base(texture, scale, positions, contentManager)
         { }
 
         public override void HandleInput()
@@ -31,22 +31,18 @@ namespace UndyingWill2D.Controllers
             if (keyboardState.IsKeyDown(Keys.W))
             {
                 _moveDirection.Y = -1;
-                OnMove(_moveDirection, _moveSpeed);
             }
             if (keyboardState.IsKeyDown(Keys.A))
             {
                 _moveDirection.X = -1;
-                OnMove(_moveDirection, _moveSpeed);
             }
             if (keyboardState.IsKeyDown(Keys.S))
             {
                 _moveDirection.Y = 1;
-                OnMove(_moveDirection, _moveSpeed);
             }
             if (keyboardState.IsKeyDown(Keys.D))
             {
                 _moveDirection.X = 1;
-                OnMove(_moveDirection, _moveSpeed);
             }
             if (mouseState.LeftButton == ButtonState.Pressed) 
             {
@@ -55,7 +51,6 @@ namespace UndyingWill2D.Controllers
             if (!_isRPressed && keyboardState.IsKeyDown(Keys.R)) 
             {
                 _isRPressed = true;
-                OnRoll(_moveDirection); 
             }
             if (keyboardState.IsKeyDown(Keys.R))
             {
@@ -66,6 +61,8 @@ namespace UndyingWill2D.Controllers
             {
                 OnBlock(mouseState); 
             }
+            OnMove(_moveDirection, _moveSpeed);
+            _isMoving = false;
         }
 
         public void OnDash(Vector2 _moveDirection)

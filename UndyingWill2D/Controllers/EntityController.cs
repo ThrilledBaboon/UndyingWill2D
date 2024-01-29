@@ -13,47 +13,41 @@ using UndyingWill2D.Managers;
 
 namespace UndyingWill2D.Controllers
 {
-    public class EntityController
+    public class EntityController : SpriteController
     {
-        public Texture2D texture;
-        public  Vector2 position;
-        public ContentManager contentManager;
         AnimationManager _animationManager;
 
         //Fields
-        private protected int _health;
-        private protected bool _isAlive;
-        private protected Vector2 _moveDirection;
-        private protected int _moveSpeed;
-
+        protected int _health;
+        protected bool _isAlive;
+        protected Vector2 _moveDirection;
+        protected int _moveSpeed;
+        private bool _isMoving;
         //Property
-        public int Health { get { return _health; } set { _health = value; } }
-        public bool IsAlive {get {return _isAlive;} set { _isAlive = value;} }
-        public Rectangle Rectangle{get { return new Rectangle((int)position.X, (int)position.Y, 75, 75); }}
+        public bool IsMoving { get { return _isMoving; } set { _isMoving = value; } }
+        public int Health { get {return _health;} set {_health = value;}}
+        public bool IsAlive {get {return _isAlive;} set {_isAlive = value;}}
         
         //Constructor
-        public EntityController(Texture2D texture, Vector2 position, ContentManager contentManager) 
-        { 
-            this.texture = texture;
-            this.position = position;
-            this.contentManager = contentManager;
-        }
+        public EntityController(Texture2D texture, int scale, Vector2 position, ContentManager contentManager) :base(texture, scale, position, contentManager)
+        { }
         //Methods
-        public void Update()
+        public virtual void Update()
         {
             HandleInput();
-            _animationManager.Update();
+            Debug.WriteLine(_isMoving);
+            _animationManager.Update(_isMoving);
         }
 
-        public void LoadContent()
+        public override void LoadContent()
         {
-            texture = contentManager.Load<Texture2D>("PlayerAnimation");
+            _texture = _contentManager.Load<Texture2D>(_texture.ToString());
             _animationManager = new(2, 2, new Vector2(32, 32));
             _animationManager.GetFrame();
         }
-        public void Draw(SpriteBatch spriteBatch)
+        public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(texture, Rectangle, _animationManager.GetFrame(), Color.White);
+            spriteBatch.Draw(_texture, Rectangle, _animationManager.GetFrame(), Color.White);
             if (_isAlive)
             {
 
@@ -66,13 +60,14 @@ namespace UndyingWill2D.Controllers
         }
         public void OnMove(Vector2 moveDirection, float moveSpeed)
         {
+            _isMoving= true;
             if (moveDirection != Vector2.Zero)
             {
                 moveDirection.Normalize();
             }
             Vector2 moveVelocity = moveDirection * moveSpeed;
-            position += moveVelocity;
-            Debug.WriteLine(moveVelocity.ToString());
+            Debug.WriteLine(moveVelocity);
+            _position += moveVelocity;
         }
         public void OnAttack(MouseState mouse)
         {

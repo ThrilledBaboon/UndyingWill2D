@@ -12,6 +12,8 @@ namespace UndyingWill2D
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         private LevelManager _level;
+        int _screenWidth;
+        int _screenHeight;
         // Public Textures
         public Texture2D Player;
         public Texture2D PlayerAnimation;
@@ -25,10 +27,10 @@ namespace UndyingWill2D
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
             //set the GraphicsDeviceManager's fullscreen property
-            int width = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
-            int height = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
-            _graphics.PreferredBackBufferWidth = width; 
-            _graphics.PreferredBackBufferHeight = height; 
+            _screenWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+            _screenHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+            _graphics.PreferredBackBufferWidth = _screenWidth; 
+            _graphics.PreferredBackBufferHeight = _screenHeight; 
         }
 
         protected override void Initialize()
@@ -37,7 +39,7 @@ namespace UndyingWill2D
             LevelManager _level = new LevelManager();
             //_level.Initialise();
             PlayerAnimation = Content.Load<Texture2D>("PlayerAnimation");
-            _player = new PlayerController(PlayerAnimation, new Vector2(0, 0), Content);
+            _player = new PlayerController(PlayerAnimation, 75, new Vector2(_screenWidth / 2, _screenHeight / 2), Content);
 
             base.Initialize();
         }

@@ -36,20 +36,26 @@ namespace UndyingWill2D.Managers
             _rowPosition = 0;
             _columnPosition = 1;
         }
-        public void Update()
+        public void Update(bool isMoving)
         {
             _frameCount++;
             if (_frameCount > _animationInterval) 
             {
                 _frameCount = 0;
-                NewFrame();
+                NewFrame(isMoving);
             }
         }
 
-        private void NewFrame()
+        private void NewFrame(bool isMoving)
         {
             _currentFrame++;
             _columnPosition++;
+            if (!isMoving)
+            {
+                _columnPosition = 0;
+                _rowPosition = 0;
+                return;
+            }
             if (_currentFrame >= _numberOfFrames)
             {
                 ResetAnimation();
