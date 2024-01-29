@@ -68,10 +68,10 @@ namespace UndyingWill2D
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
-            //_spriteBatch.Draw(PlayerAnimation, new Rectangle(0, 0, 75, 75), new Rectangle(32, 0, 32, 32), Color.White); 
-            _spriteBatch.Draw(_player.texture, _player.Rectangle, new Rectangle(32, 0, 32, 32), Color.White);
+            //_spriteBatch.Draw(PlayerAnimation, new Rectangle(0, 0, 75, 75), new Rectangle(32, 0, 32, 32), Color.White);
+            //_spriteBatch.Draw(_player.texture, _player.Rectangle, new Rectangle(32, 0, 32, 32), Color.White);
 
-            //_spriteBatch.Draw(_player.texture, _player.Rectangle, _animationManager.GetFrame(), Color.White);
+            _spriteBatch.Draw(_player.texture, _player.Rectangle, _animationManager.GetFrame(), Color.White);
             _spriteBatch.End(); 
 
             base.Draw(gameTime);

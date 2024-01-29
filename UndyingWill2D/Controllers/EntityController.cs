@@ -26,7 +26,7 @@ namespace UndyingWill2D.Controllers
         //Property
         public int Health { get { return _health; } set { _health = value; } }
         public bool IsAlive {get {return _isAlive;} set { _isAlive = value;} }
-        public Rectangle Rectangle{get { return new Rectangle((int)position.X, (int)position.Y, 100, 100); }}
+        public Rectangle Rectangle{get { return new Rectangle((int)position.X, (int)position.Y, 75, 75); }}
         
         //Constructor
         public EntityController(Texture2D texture, Vector2 position, ContentManager contentManager) 
@@ -44,7 +44,7 @@ namespace UndyingWill2D.Controllers
 
         public void LoadContent()
         {
-            texture = contentManager.Load<Texture2D>("PlayerSprite");
+            texture = contentManager.Load<Texture2D>("PlayerAnimation");
         }
         public void Draw()
         {

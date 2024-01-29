@@ -63,7 +63,7 @@ namespace UndyingWill2D.Managers
 
         private void ResetAnimation()
         {
-            _frameCount = 0;
+            _currentFrame = 0;
             _columnPosition = 1;
             _rowPosition = 0;
         }
