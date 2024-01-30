@@ -16,6 +16,7 @@ namespace UndyingWill2D.Controllers
     public class EntityController : SpriteController
     { 
         protected Vector2 _moveDirection;
+        protected ItemController _weapon;
         protected int _moveSpeed;
         //Property
         public AnimationManager AnimationManager { get; private set; }
@@ -25,22 +26,26 @@ namespace UndyingWill2D.Controllers
         
         //Constructor
         public EntityController(Texture2D texture, int scale, Vector2 position, ContentManager contentManager) :base(texture, scale, position, contentManager)
-        { }
+        {
+            Vector2 weaponPosition = new Vector2(position.X + scale / 2, position.Y);
+            Texture2D weaponTexture = contentManager.Load<Texture2D>("SwordAnimation");
+            _weapon = new ItemController(weaponTexture, scale, weaponPosition, contentManager);
+        }
         //Methods
         public virtual void Update()
         {
             HandleInput();
+            _weapon.Update(_position);
         }
 
-        public override void LoadContent()
+        public void LoadContent()
         {
-            _texture = _contentManager.Load<Texture2D>(_texture.ToString());
-            AnimationManager = new(2, 2, new Vector2(32, 32));
-            AnimationManager.GetFrame();
+            AnimationManager = new(2, 2, new Vector2(32, 32), 1);
         }
         public override void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(_texture, Rectangle, AnimationManager.GetFrame(), Color.White);
+            _weapon.Draw(spriteBatch);
             if (IsAlive)
             {
 
@@ -66,7 +71,7 @@ namespace UndyingWill2D.Controllers
         }
         public void OnAttack(Point point)
         {
-
+            _weapon.Attack();
         }
         public void OnStun()
         {

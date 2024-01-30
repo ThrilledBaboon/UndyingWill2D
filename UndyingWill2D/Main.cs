@@ -25,6 +25,7 @@ namespace UndyingWill2D
         public Texture2D FloorTile;
 
         PlayerController _player;
+        //MobController _enemy;
         TileController _floor;
 
         List<TileController> _tiles;
@@ -47,21 +48,22 @@ namespace UndyingWill2D
             LevelManager _level = new LevelManager();
             //_level.Initialise();
             PlayerAnimation = Content.Load<Texture2D>("PlayerAnimation");
+            //EnemyAnimation = Content.Load<Texture2D>("SkeletonAnimation");
             FloorTile = Content.Load<Texture2D>("FloorTile");
             _tiles = new List<TileController>();
-            for (int i = 0; i < 10; i++) 
+            for (int i = 0; i < 30; i++) 
             {
-                for (int j = 0; j < 10; j++)
+                for (int j = 0; j < 40; j++)
                 {
-                    int scale = 75;
+                    int scale = 50;
                     float currentXPosition = j * scale;
                     float currentYPosition = i * scale;
                     _floor = new TileController(FloorTile, scale, new Vector2(currentXPosition, currentYPosition), Content);
                     _tiles.Add(_floor);
                 }
             }
-            Debug.WriteLine(_tiles.Count);
-            _player = new PlayerController(PlayerAnimation, 75, new Vector2(_screenWidth / 2, _screenHeight / 2), Content);
+            //_enemy = new MobController(EnemyAnimation, 90, new Vector2(_screenWidth / 4, _screenHeight / 4), Content);
+            _player = new PlayerController(PlayerAnimation,90, new Vector2(_screenWidth / 2, _screenHeight / 2), Content);
 
             base.Initialize();
         }
@@ -70,7 +72,9 @@ namespace UndyingWill2D
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             PlayerAnimation = Content.Load<Texture2D>("PlayerAnimation");
+            EnemyAnimation = Content.Load<Texture2D>("SkeletonAnimation");
             _player.LoadContent();
+            //_enemy.LoadContent();
             base.LoadContent();
         }
 
@@ -79,6 +83,7 @@ namespace UndyingWill2D
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
             _player.Update();
+            //_enemy.Update();
 
             base.Update(gameTime);
         }
@@ -95,7 +100,9 @@ namespace UndyingWill2D
                 TileController floor = _tiles[i];
                 floor.Draw(_spriteBatch);
             }
+            
             _player.Draw(_spriteBatch);
+            //_enemy.Draw(_spriteBatch);
             _spriteBatch.End(); 
 
             base.Draw(gameTime);

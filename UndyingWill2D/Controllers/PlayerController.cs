@@ -17,8 +17,8 @@ namespace UndyingWill2D.Controllers
     {
         //Fields
         new float _moveSpeed = 2.5f;
-        float _dashSpeed = 75f;
-        float _dashColldown = 75f;
+        float _dashSpeed = 100f;
+        float _dashColldown = 150f;
         float _timeSinceLastDash = 0;
         //Property
         public int Stamina { get; set; }
@@ -55,12 +55,12 @@ namespace UndyingWill2D.Controllers
             {
                 OnAttack(mouseState.Position); 
             }
-            if (_timeSinceLastDash >= _dashColldown && keyboardState.IsKeyDown(Keys.R)) 
+            if (_timeSinceLastDash >= _dashColldown && keyboardState.IsKeyDown(Keys.LeftShift)) 
             {
                 _timeSinceLastDash = 0;
                 OnDash(_moveDirection);
             }
-            if (keyboardState.IsKeyDown(Keys.LeftShift)) 
+            if (mouseState.RightButton == ButtonState.Pressed) 
             {
                 OnBlock(mouseState.Position); 
             }

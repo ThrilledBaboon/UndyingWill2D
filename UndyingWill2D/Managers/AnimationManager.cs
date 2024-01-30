@@ -22,35 +22,44 @@ namespace UndyingWill2D.Managers
 
         int _rowPosition;
         int _columnPosition;
+        int _startColumn;
+        bool IsMoving { get; set; }
 
-        public AnimationManager(int numberOfFrames, int numberOfColumns, Microsoft.Xna.Framework.Vector2 spriteResolution) 
+        public AnimationManager(int numberOfFrames, int numberOfColumns, Microsoft.Xna.Framework.Vector2 spriteResolution, int startColumn) 
         {
             this._numberOfFrames = numberOfFrames;
             this._numberOfColumns = numberOfColumns;
             this._spriteResolution = spriteResolution;
+            this._startColumn = startColumn;
 
             _frameCount = 0;
             _currentFrame = 0;
             _animationInterval = 15;
 
             _rowPosition = 0;
-            _columnPosition = 1;
+            _columnPosition = startColumn;
         }
         public void Update(bool isMoving)
         {
+            IsMoving = isMoving;
             _frameCount++;
             if (_frameCount > _animationInterval) 
             {
                 _frameCount = 0;
-                NewFrame(isMoving);
+                NewFrame();
             }
         }
-
-        private void NewFrame(bool isMoving)
+        public Microsoft.Xna.Framework.Rectangle Attack()
+        {
+            NewFrame();
+            Microsoft.Xna.Framework.Rectangle frameRect = GetFrame();
+            return frameRect;
+        }
+        private void NewFrame()
         {
             _currentFrame++;
             _columnPosition++;
-            if (!isMoving)
+            if (!IsMoving)
             {
                 _columnPosition = 0;
                 _rowPosition = 0;
@@ -70,7 +79,7 @@ namespace UndyingWill2D.Managers
         private void ResetAnimation()
         {
             _currentFrame = 0;
-            _columnPosition = 1;
+            _columnPosition = _startColumn;
             _rowPosition = 0;
         }
 
