@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.Security;
 using UndyingWill2D.Controllers;
@@ -48,11 +49,18 @@ namespace UndyingWill2D
             PlayerAnimation = Content.Load<Texture2D>("PlayerAnimation");
             FloorTile = Content.Load<Texture2D>("FloorTile");
             _tiles = new List<TileController>();
-            //for (int i = 0; i < 10; i++) 
-            //{ 
-            //_tiles.Append<TileController>(new TileController(FloorTile, 75, new Vector2(0,0), Content));
-            //}
-            _floor = new TileController(FloorTile, 75, new Vector2(0, 0), Content);
+            for (int i = 0; i < 10; i++) 
+            {
+                for (int j = 0; j < 10; j++)
+                {
+                    int scale = 75;
+                    float currentXPosition = j * scale;
+                    float currentYPosition = i * scale;
+                    _floor = new TileController(FloorTile, scale, new Vector2(currentXPosition, currentYPosition), Content);
+                    _tiles.Add(_floor);
+                }
+            }
+            Debug.WriteLine(_tiles.Count);
             _player = new PlayerController(PlayerAnimation, 75, new Vector2(_screenWidth / 2, _screenHeight / 2), Content);
 
             base.Initialize();
@@ -80,7 +88,13 @@ namespace UndyingWill2D
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
-            _floor.Draw(_spriteBatch);
+
+
+            for (int i = 0; i < _tiles.Count; i++)
+            {
+                TileController floor = _tiles[i];
+                floor.Draw(_spriteBatch);
+            }
             _player.Draw(_spriteBatch);
             _spriteBatch.End(); 
 

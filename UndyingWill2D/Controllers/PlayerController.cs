@@ -77,7 +77,6 @@ namespace UndyingWill2D.Controllers
                 moveDirection.Normalize();
             }
             Vector2 moveVelocity = moveDirection * moveSpeed;
-            Debug.WriteLine(moveVelocity);
             _position += moveVelocity;
         }
 
