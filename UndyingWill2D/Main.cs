@@ -18,6 +18,8 @@ namespace UndyingWill2D
         public Texture2D Player;
         public Texture2D PlayerAnimation;
         public Texture2D Enemy;
+        public Texture2D EnemyAnimation;
+        public Texture2D FloorTile;
 
         PlayerController _player;
 
@@ -39,6 +41,10 @@ namespace UndyingWill2D
             LevelManager _level = new LevelManager();
             //_level.Initialise();
             PlayerAnimation = Content.Load<Texture2D>("PlayerAnimation");
+            for (int i = 0; i < 10; i++) 
+            { 
+                
+            }
             _player = new PlayerController(PlayerAnimation, 75, new Vector2(_screenWidth / 2, _screenHeight / 2), Content);
 
             base.Initialize();
