@@ -37,19 +37,19 @@ namespace UndyingWill2D.Controllers
             _moveDirection = Vector2.Zero;
             if (keyboardState.IsKeyDown(Keys.W))
             {
-                _moveDirection.Y = -1;
+                _moveDirection.Y += -1;
             }
             if (keyboardState.IsKeyDown(Keys.A))
             {
-                _moveDirection.X = -1;
+                _moveDirection.X += -1;
             }
             if (keyboardState.IsKeyDown(Keys.S))
             {
-                _moveDirection.Y = 1;
+                _moveDirection.Y += 1;
             }
             if (keyboardState.IsKeyDown(Keys.D))
             {
-                _moveDirection.X = 1;
+                _moveDirection.X += 1;
             }
             if (mouseState.LeftButton == ButtonState.Pressed) 
             {
