@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace UndyingWill2D.Managers
 {
-    internal class AnimationManager
+    public class AnimationManager
     {
         int _numberOfFrames;
         int _numberOfColumns;

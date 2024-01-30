@@ -17,12 +17,18 @@ namespace UndyingWill2D.Controllers
     {
         //Fields
         new float _moveSpeed = 2.5f;
-        int _stamina;
-        bool _isRPressed;
+        float _dashSpeed = 75f;
+        float _dashColldown = 75f;
+        float _timeSinceLastDash = 0;
         //Property
-        public int Stamina { get { return _stamina; } set { _stamina = value; } }
+        public int Stamina { get; set; }
         public PlayerController(Texture2D texture, int scale, Vector2 positions, ContentManager contentManager) : base(texture, scale, positions, contentManager)
         { }
+        public override void Update()
+        {
+            HandleInput();
+            _timeSinceLastDash++;
+        }
 
         public override void HandleInput()
         {
@@ -47,20 +53,16 @@ namespace UndyingWill2D.Controllers
             }
             if (mouseState.LeftButton == ButtonState.Pressed) 
             {
-                OnAttack(mouseState); 
+                OnAttack(mouseState.Position); 
             }
-            if (!_isRPressed && keyboardState.IsKeyDown(Keys.R)) 
+            if (_timeSinceLastDash >= _dashColldown && keyboardState.IsKeyDown(Keys.R)) 
             {
-                _isRPressed = true;
-            }
-            if (keyboardState.IsKeyDown(Keys.R))
-            {
-                _isRPressed = false;
+                _timeSinceLastDash = 0;
                 OnDash(_moveDirection);
             }
             if (keyboardState.IsKeyDown(Keys.LeftShift)) 
             {
-                OnBlock(mouseState); 
+                OnBlock(mouseState.Position); 
             }
             OnMove(_moveDirection, _moveSpeed);
         }
@@ -69,7 +71,7 @@ namespace UndyingWill2D.Controllers
         {
             if (moveDirection == Vector2.Zero) { IsMoving = false; }
             else { IsMoving = true; }
-            _animationManager.Update(IsMoving);
+            AnimationManager.Update(IsMoving);
             if (moveDirection != Vector2.Zero)
             {
                 moveDirection.Normalize();
@@ -81,10 +83,10 @@ namespace UndyingWill2D.Controllers
 
         public void OnDash(Vector2 _moveDirection)
         {
-
+            OnMove(_moveDirection, _dashSpeed);
         }
 
-        public void OnBlock(MouseState mouseState)
+        public override void OnBlock(Point point)
         {
 
         }

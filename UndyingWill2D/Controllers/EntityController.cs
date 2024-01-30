@@ -14,20 +14,14 @@ using UndyingWill2D.Managers;
 namespace UndyingWill2D.Controllers
 {
     public class EntityController : SpriteController
-    {
-        AnimationManager _animationManager;
-
-        //Fields
-        int _health;
-        bool _isAlive;
+    { 
         protected Vector2 _moveDirection;
         protected int _moveSpeed;
-        bool _isMoving;
         //Property
-        public AnimationManager AnimationManager { get { return _animationManager; } }
-        public bool IsMoving { get { return _isMoving; } set { _isMoving = value; } }
-        public int Health { get {return _health;} set {_health = value;}}
-        public bool IsAlive {get {return _isAlive;} set {_isAlive = value;}}
+        public AnimationManager AnimationManager { get; private set; }
+        public bool IsMoving { get; set; }
+        public int Health { get; set; }
+        public bool IsAlive { get; set; }
         
         //Constructor
         public EntityController(Texture2D texture, int scale, Vector2 position, ContentManager contentManager) :base(texture, scale, position, contentManager)
@@ -36,19 +30,18 @@ namespace UndyingWill2D.Controllers
         public virtual void Update()
         {
             HandleInput();
-            Debug.WriteLine(_isMoving);
         }
 
         public override void LoadContent()
         {
             _texture = _contentManager.Load<Texture2D>(_texture.ToString());
-            _animationManager = new(2, 2, new Vector2(32, 32));
-            _animationManager.GetFrame();
+            AnimationManager = new(2, 2, new Vector2(32, 32));
+            AnimationManager.GetFrame();
         }
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(_texture, Rectangle, _animationManager.GetFrame(), Color.White);
-            if (_isAlive)
+            spriteBatch.Draw(_texture, Rectangle, AnimationManager.GetFrame(), Color.White);
+            if (IsAlive)
             {
 
             }
@@ -62,7 +55,7 @@ namespace UndyingWill2D.Controllers
         {
             if (moveDirection == Vector2.Zero) { IsMoving = false; }
             else { IsMoving = true; }
-            _animationManager.Update(IsMoving);
+            AnimationManager.Update(IsMoving);
             if (moveDirection != Vector2.Zero)
             {
                 moveDirection.Normalize();
@@ -71,11 +64,15 @@ namespace UndyingWill2D.Controllers
             Debug.WriteLine(moveVelocity);
             _position += moveVelocity;
         }
-        public void OnAttack(MouseState mouse)
+        public void OnAttack(Point point)
         {
 
         }
         public void OnStun()
+        {
+
+        }
+        public virtual void OnBlock(Point point)
         {
 
         }
