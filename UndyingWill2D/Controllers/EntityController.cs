@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection.Metadata;
@@ -16,8 +17,12 @@ namespace UndyingWill2D.Controllers
     public class EntityController : SpriteController
     { 
         protected Vector2 _moveDirection;
-        protected ItemController _weapon;
+        protected ItemController _bow;
+        protected ItemController _sword;
+        protected ItemController _shield;
         protected int _moveSpeed;
+        protected List<ItemController> _hotBar = new List<ItemController>();
+        protected int _currentHotBarIndex;
         //Property
         public AnimationManager AnimationManager { get; private set; }
         public bool IsMoving { get; set; }
@@ -30,14 +35,23 @@ namespace UndyingWill2D.Controllers
             Vector2 weaponPosition = new Vector2(position.X + scale / 2, position.Y);
             //Texture2D weaponTexture = contentManager.Load<Texture2D>("SwordAnimation");
             //_weapon = new ItemController("Sword", weaponTexture, scale, weaponPosition, contentManager);
-            Texture2D weaponTexture = contentManager.Load<Texture2D>("BowAnimation");
-            _weapon = new ItemController("Bow", weaponTexture, scale, weaponPosition, contentManager);
+            Texture2D bowTexture = contentManager.Load<Texture2D>("BowAnimation");
+            Texture2D swordTexture = contentManager.Load<Texture2D>("SwordAnimation");
+            Texture2D shieldTexture = contentManager.Load<Texture2D>("SwordAnimation");
+            _bow = new ItemController("Bow", bowTexture, scale, weaponPosition, contentManager);
+            _sword = new ItemController("Sword", swordTexture, scale, weaponPosition, contentManager);
+            _shield = new ItemController("Shield", swordTexture, scale, weaponPosition, contentManager);
+            _hotBar.Add(_sword);
+            _hotBar.Add(_bow);
+            _hotBar.Add(_shield);
+            _currentHotBarIndex = 0;
         }
         //Methods
         public virtual void Update()
         {
             HandleInput();
-            _weapon.Update(_position);
+            ItemController heldItem = _hotBar[_currentHotBarIndex];
+            heldItem.Update(_position);
         }
 
         public void LoadContent()
@@ -47,13 +61,14 @@ namespace UndyingWill2D.Controllers
         public override void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(_texture, Rectangle, AnimationManager.GetFrame(), Color.White);
-            _weapon.Draw(spriteBatch);
+            ItemController heldItem = _hotBar[_currentHotBarIndex];
+            heldItem.Update(_position);
+            heldItem.Draw(spriteBatch);
             if (IsAlive)
             {
 
             }
         }
-
         public virtual void HandleInput() 
         {
 
@@ -73,7 +88,8 @@ namespace UndyingWill2D.Controllers
         }
         public void OnAttack(Point point)
         {
-            _weapon.Attack();
+            ItemController heldItem = _hotBar[_currentHotBarIndex];
+            heldItem.Attack();
         }
         public void OnStun()
         {
@@ -83,7 +99,5 @@ namespace UndyingWill2D.Controllers
         {
 
         }
-
-
     }
 }

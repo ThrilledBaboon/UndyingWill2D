@@ -17,14 +17,12 @@ namespace UndyingWill2D.Controllers
     {
         //Needs Refactoring wont meet requirements
         List<ItemController> _inventory = new List<ItemController>();
-        List<ItemController> _hotBar = new List<ItemController>();
 
         //Fields
         new float _moveSpeed = 2.5f;
         float _dashSpeed = 100f;
         float _dashColldown = 150f;
         float _timeSinceLastDash = 0;
-        int _currentHotBarSlot = 0;
         //Property
         public int Stamina { get; set; }
         public PlayerController(Texture2D texture, int scale, Vector2 positions, ContentManager contentManager) : base(texture, scale, positions, contentManager)
@@ -32,7 +30,8 @@ namespace UndyingWill2D.Controllers
         public override void Update()
         {
             HandleInput();
-            _weapon.Update(_position);
+            ItemController heldItem = _hotBar[_currentHotBarIndex];
+            heldItem.Update(_position);
             _timeSinceLastDash++;
         }
 
@@ -72,15 +71,15 @@ namespace UndyingWill2D.Controllers
             }
             if (keyboardState.IsKeyDown(Keys.D1))
             {
-                ChangeHotBarItem(1);
+                ChangeHotBarItem(0);
             }
             if (keyboardState.IsKeyDown(Keys.D2))
             {
-                ChangeHotBarItem(2);
+                ChangeHotBarItem(1);
             }
             if (keyboardState.IsKeyDown(Keys.D3))
             {
-                ChangeHotBarItem(3);
+                ChangeHotBarItem(2);
             }
             if (keyboardState.IsKeyDown(Keys.F))
             {
@@ -118,19 +117,19 @@ namespace UndyingWill2D.Controllers
 
         public void ChangeHotBarItem(int index)
         {
-            _currentHotBarSlot = index;
+            _currentHotBarIndex = index;
         }
         public void OnInteract()
         {
             if (FindInteractablesInRange() == false) { return; }
-            if (FindInteractablesInRange() == true)
-            {
-                object closestInteractable = ClosestInteractable();
-                if (closestInteractable.GetType == GetType(ItemController))
-                {
-                    _hotBar.Add(closestInteractable);
-                }
-            }
+            //if (FindInteractablesInRange() == true)
+            //{
+            //    object closestInteractable = ClosestInteractable();
+            //    if (closestInteractable.GetType == GetType(ItemController))
+            //    {
+            //        _hotBar.Add(closestInteractable);
+            //    }
+            //}
             // this will need to do a lot:
             // - open doors
             // - pick up items on the floor
@@ -152,7 +151,7 @@ namespace UndyingWill2D.Controllers
 
         public void OnDrop()
         {
-            _hotBar.RemoveAt(_currentHotBarSlot - 1);
+            _hotBar.RemoveAt(_currentHotBarIndex);
             // needs to use current hotbar slot and remove it from list
         }
     }
