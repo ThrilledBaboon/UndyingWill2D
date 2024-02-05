@@ -16,20 +16,40 @@ namespace UndyingWill2D.Controllers
         AnimationManager _animationManager;
         bool _hasAttacked;
         Rectangle frameRectangle;
-        public ItemController(Texture2D texture, int scale, Vector2 position, ContentManager contentManager) : base(texture, scale, position, contentManager)
+        String _type;
+        public ItemController(string type, Texture2D texture, int scale, Vector2 position, ContentManager contentManager) : base(texture, scale, position, contentManager)
         {
-            _animationManager = new AnimationManager(2, 2, new Vector2(32, 32), 0);
+            this._type = type;
+            switch (_type)
+            {
+                case "Sword":
+                    _animationManager = new AnimationManager(2, 2, new Vector2(32, 32), 0);
+                    break;
+                case "Bow":
+                    _animationManager = new AnimationManager(3, 2, new Vector2(32, 32), 0);
+                    break;
+            }
         }
 
         public void Update(Vector2 OwnerPosition)
         {
             _position.X = OwnerPosition.X + _scale/2;
-            _position.Y = OwnerPosition.Y + _scale / 2;
+            _position.Y = OwnerPosition.Y + 10;
         }
         public override void Draw(SpriteBatch spriteBatch)
         {
-            if (_hasAttacked)
+            if (_hasAttacked && _type == "Sword")
             {
+                frameRectangle = _animationManager.Attack();
+                spriteBatch.Draw(_texture, Rectangle, frameRectangle, Color.White);
+                frameRectangle = _animationManager.Attack();
+                spriteBatch.Draw(_texture, Rectangle, frameRectangle, Color.White);
+                _hasAttacked = false;
+            }
+            else if (_hasAttacked && _type == "Bow")
+            {
+                frameRectangle = _animationManager.Attack();
+                spriteBatch.Draw(_texture, Rectangle, frameRectangle, Color.White);
                 frameRectangle = _animationManager.Attack();
                 spriteBatch.Draw(_texture, Rectangle, frameRectangle, Color.White);
                 frameRectangle = _animationManager.Attack();

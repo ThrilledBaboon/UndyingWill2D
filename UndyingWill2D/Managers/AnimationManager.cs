@@ -46,16 +46,31 @@ namespace UndyingWill2D.Managers
             if (_frameCount > _animationInterval) 
             {
                 _frameCount = 0;
-                NewFrame();
+                NewWalkFrame();
             }
         }
         public Microsoft.Xna.Framework.Rectangle Attack()
         {
-            NewFrame();
+            NewAttackFrame();
             Microsoft.Xna.Framework.Rectangle frameRect = GetFrame();
             return frameRect;
         }
-        private void NewFrame()
+        private void NewAttackFrame()
+        {
+            _currentFrame++;
+            _columnPosition++;
+            if (_currentFrame >= _numberOfFrames)
+            {
+                ResetAnimation();
+            }
+            if (_columnPosition >= _numberOfColumns)
+            {
+                _columnPosition = 0;
+                _rowPosition++;
+            }
+        }
+
+        private void NewWalkFrame()
         {
             _currentFrame++;
             _columnPosition++;

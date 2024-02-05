@@ -27,6 +27,7 @@ namespace UndyingWill2D.Controllers
         public override void Update()
         {
             HandleInput();
+            _weapon.Update(_position);
             _timeSinceLastDash++;
         }
 

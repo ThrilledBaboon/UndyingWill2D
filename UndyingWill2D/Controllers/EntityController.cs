@@ -28,8 +28,10 @@ namespace UndyingWill2D.Controllers
         public EntityController(Texture2D texture, int scale, Vector2 position, ContentManager contentManager) :base(texture, scale, position, contentManager)
         {
             Vector2 weaponPosition = new Vector2(position.X + scale / 2, position.Y);
-            Texture2D weaponTexture = contentManager.Load<Texture2D>("SwordAnimation");
-            _weapon = new ItemController(weaponTexture, scale, weaponPosition, contentManager);
+            //Texture2D weaponTexture = contentManager.Load<Texture2D>("SwordAnimation");
+            //_weapon = new ItemController("Sword", weaponTexture, scale, weaponPosition, contentManager);
+            Texture2D weaponTexture = contentManager.Load<Texture2D>("BowAnimation");
+            _weapon = new ItemController("Bow", weaponTexture, scale, weaponPosition, contentManager);
         }
         //Methods
         public virtual void Update()
