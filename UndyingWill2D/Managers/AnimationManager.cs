@@ -12,18 +12,17 @@ namespace UndyingWill2D.Managers
 {
     public class AnimationManager
     {
-        int _numberOfFrames;
-        int _numberOfColumns;
-        Microsoft.Xna.Framework.Vector2 _spriteResolution;
+        protected int _numberOfFrames;
+        protected int _numberOfColumns;
+        protected Microsoft.Xna.Framework.Vector2 _spriteResolution;
 
-        int _frameCount;
-        int _currentFrame;
-        int _animationInterval;
+        protected int _frameCount;
+        protected int _currentFrame;
+        protected int _animationInterval;
 
-        int _rowPosition;
-        int _columnPosition;
-        int _startColumn;
-        bool IsMoving { get; set; }
+        protected int _rowPosition;
+        protected int _columnPosition;
+        protected int _startColumn;
 
         public AnimationManager(int numberOfFrames, int numberOfColumns, Microsoft.Xna.Framework.Vector2 spriteResolution, int startColumn) 
         {
@@ -39,70 +38,16 @@ namespace UndyingWill2D.Managers
             _rowPosition = 0;
             _columnPosition = startColumn;
         }
-        public void Update(bool isMoving)
-        {
-            IsMoving = isMoving;
-            _frameCount++;
-            if (_frameCount > _animationInterval) 
-            {
-                _frameCount = 0;
-                NewWalkFrame();
-            }
-        }
-        public Microsoft.Xna.Framework.Rectangle Attack()
-        {
-            NewAttackFrame();
-            Microsoft.Xna.Framework.Rectangle frameRect = GetFrame();
-            return frameRect;
-        }
-        private void NewAttackFrame()
-        {
-            _currentFrame++;
-            _columnPosition++;
-            if (_currentFrame >= _numberOfFrames)
-            {
-                ResetAnimation();
-            }
-            if (_columnPosition >= _numberOfColumns)
-            {
-                _columnPosition = 0;
-                _rowPosition++;
-            }
-        }
-
-        private void NewWalkFrame()
-        {
-            _currentFrame++;
-            _columnPosition++;
-            if (!IsMoving)
-            {
-                _columnPosition = 0;
-                _rowPosition = 0;
-                return;
-            }
-            if (_currentFrame >= _numberOfFrames)
-            {
-                ResetAnimation();
-            }
-            if (_columnPosition >= _numberOfColumns)
-            {
-                _columnPosition = 0;
-                _rowPosition++;
-            }
-        }
-
-        private void ResetAnimation()
+        public void ResetAnimation()
         {
             _currentFrame = 0;
             _columnPosition = _startColumn;
             _rowPosition = 0;
         }
-
         public Microsoft.Xna.Framework.Rectangle GetFrame()
         {
             return new Microsoft.Xna.Framework.Rectangle(_columnPosition * (int)_spriteResolution.X, _rowPosition * (int)_spriteResolution.Y,
                 (int)_spriteResolution.X, (int)_spriteResolution.Y);
         }
-
     }
 }

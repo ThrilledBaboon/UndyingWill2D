@@ -13,7 +13,7 @@ namespace UndyingWill2D.Controllers
 {
     public class ItemController : SpriteController
     {
-        AnimationManager _animationManager;
+        ItemAnimationManager _itemAnimationManager;
         bool _hasAttacked;
         Rectangle frameRectangle;
         String _type;
@@ -23,10 +23,13 @@ namespace UndyingWill2D.Controllers
             switch (_type)
             {
                 case "Sword":
-                    _animationManager = new AnimationManager(2, 2, new Vector2(32, 32), 0);
+                    _itemAnimationManager = new ItemAnimationManager(2, 2, new Vector2(32, 32), 0);
                     break;
                 case "Bow":
-                    _animationManager = new AnimationManager(3, 2, new Vector2(32, 32), 0);
+                    _itemAnimationManager = new ItemAnimationManager(3, 2, new Vector2(32, 32), 0);
+                    break;
+                case "Shield":
+                    _itemAnimationManager = new ItemAnimationManager(2, 2, new Vector2(32, 32), 0);
                     break;
             }
         }
@@ -35,24 +38,20 @@ namespace UndyingWill2D.Controllers
         {
             _position.X = OwnerPosition.X + _scale/2;
             _position.Y = OwnerPosition.Y + 10;
+            _itemAnimationManager.Update(_hasAttacked);
         }
         public override void Draw(SpriteBatch spriteBatch)
         {
             if (_hasAttacked && _type == "Sword")
             {
-                frameRectangle = _animationManager.Attack();
-                spriteBatch.Draw(_texture, Rectangle, frameRectangle, Color.White);
-                frameRectangle = _animationManager.Attack();
+                frameRectangle = _itemAnimationManager.Attack();
                 spriteBatch.Draw(_texture, Rectangle, frameRectangle, Color.White);
                 _hasAttacked = false;
             }
             else if (_hasAttacked && _type == "Bow")
             {
-                frameRectangle = _animationManager.Attack();
-                spriteBatch.Draw(_texture, Rectangle, frameRectangle, Color.White);
-                frameRectangle = _animationManager.Attack();
-                spriteBatch.Draw(_texture, Rectangle, frameRectangle, Color.White);
-                frameRectangle = _animationManager.Attack();
+                // need to add a for time holding down button 
+                frameRectangle = _itemAnimationManager.Attack();
                 spriteBatch.Draw(_texture, Rectangle, frameRectangle, Color.White);
                 _hasAttacked = false;
             }

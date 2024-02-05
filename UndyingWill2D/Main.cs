@@ -24,7 +24,7 @@ namespace UndyingWill2D
         public Texture2D EnemyAnimation;
         public Texture2D FloorTile;
 
-        PlayerController _player;
+        //PlayerController _player;
         //MobController _enemy;
         TileController _floor;
 
@@ -45,25 +45,25 @@ namespace UndyingWill2D
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            LevelManager _level = new LevelManager();
-            //_level.Initialise();
-            PlayerAnimation = Content.Load<Texture2D>("PlayerAnimation");
+            LevelManager _level = new LevelManager(_spriteBatch, Content);
+            _level.Initialise();
+            //PlayerAnimation = Content.Load<Texture2D>("PlayerAnimation");
             //EnemyAnimation = Content.Load<Texture2D>("SkeletonAnimation");
-            FloorTile = Content.Load<Texture2D>("FloorTile");
-            _tiles = new List<TileController>();
-            for (int i = 0; i < 30; i++) 
-            {
-                for (int j = 0; j < 40; j++)
-                {
-                    int scale = 50;
-                    float currentXPosition = j * scale;
-                    float currentYPosition = i * scale;
-                    _floor = new TileController(FloorTile, scale, new Vector2(currentXPosition, currentYPosition), Content);
-                    _tiles.Add(_floor);
-                }
-            }
+            //FloorTile = Content.Load<Texture2D>("FloorTile");
+            //_tiles = new List<TileController>();
+            //for (int i = 0; i < 30; i++) 
+            //{
+            //    for (int j = 0; j < 40; j++)
+            //    {
+            //        int scale = 50;
+            //        float currentXPosition = j * scale;
+            //        float currentYPosition = i * scale;
+            //        _floor = new TileController(FloorTile, scale, new Vector2(currentXPosition, currentYPosition), Content);
+            //        _tiles.Add(_floor);
+            //    }
+            //}
             //_enemy = new MobController(EnemyAnimation, 90, new Vector2(_screenWidth / 4, _screenHeight / 4), Content);
-            _player = new PlayerController(PlayerAnimation,90, new Vector2(_screenWidth / 2, _screenHeight / 2), Content);
+            //_player = new PlayerController(PlayerAnimation,90, new Vector2(_screenWidth / 2, _screenHeight / 2), Content);
 
             base.Initialize();
         }
@@ -73,7 +73,8 @@ namespace UndyingWill2D
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             PlayerAnimation = Content.Load<Texture2D>("PlayerAnimation");
             EnemyAnimation = Content.Load<Texture2D>("SkeletonAnimation");
-            _player.LoadContent();
+            _level.LoadContent();
+            //_player.LoadContent();
             //_enemy.LoadContent();
             base.LoadContent();
         }
@@ -82,7 +83,8 @@ namespace UndyingWill2D
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-            _player.Update();
+            _level.Update();
+            //_player.Update();
             //_enemy.Update();
 
             base.Update(gameTime);
@@ -95,13 +97,13 @@ namespace UndyingWill2D
             _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
 
 
-            for (int i = 0; i < _tiles.Count; i++)
-            {
-                TileController floor = _tiles[i];
-                floor.Draw(_spriteBatch);
-            }
-            
-            _player.Draw(_spriteBatch);
+            //for (int i = 0; i < _tiles.Count; i++)
+            //{
+            //    TileController floor = _tiles[i];
+            //    floor.Draw(_spriteBatch);
+            //}
+            _level.Draw();
+            //_player.Draw(_spriteBatch);
             //_enemy.Draw(_spriteBatch);
             _spriteBatch.End(); 
 

@@ -20,11 +20,11 @@ namespace UndyingWill2D.Controllers
         protected ItemController _bow;
         protected ItemController _sword;
         protected ItemController _shield;
-        protected int _moveSpeed;
+        protected float _moveSpeed;
         protected List<ItemController> _hotBar = new List<ItemController>();
         protected int _currentHotBarIndex;
         //Property
-        public AnimationManager AnimationManager { get; private set; }
+        public WalkAnimationManager WalkAnimationManager { get; private set; }
         public bool IsMoving { get; set; }
         public int Health { get; set; }
         public bool IsAlive { get; set; }
@@ -56,13 +56,12 @@ namespace UndyingWill2D.Controllers
 
         public void LoadContent()
         {
-            AnimationManager = new(2, 2, new Vector2(32, 32), 1);
+            WalkAnimationManager = new(2, 2, new Vector2(32, 32), 1);
         }
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(_texture, Rectangle, AnimationManager.GetFrame(), Color.White);
+            spriteBatch.Draw(_texture, Rectangle, WalkAnimationManager.GetFrame(), Color.White);
             ItemController heldItem = _hotBar[_currentHotBarIndex];
-            heldItem.Update(_position);
             heldItem.Draw(spriteBatch);
             if (IsAlive)
             {
@@ -77,13 +76,12 @@ namespace UndyingWill2D.Controllers
         {
             if (moveDirection == Vector2.Zero) { IsMoving = false; }
             else { IsMoving = true; }
-            AnimationManager.Update(IsMoving);
+            WalkAnimationManager.Update(IsMoving);
             if (moveDirection != Vector2.Zero)
             {
                 moveDirection.Normalize();
             }
             Vector2 moveVelocity = moveDirection * moveSpeed;
-            Debug.WriteLine(moveVelocity);
             _position += moveVelocity;
         }
         public void OnAttack(Point point)

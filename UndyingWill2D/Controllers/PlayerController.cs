@@ -15,24 +15,34 @@ namespace UndyingWill2D.Controllers
 {
     public class PlayerController : EntityController
     {
-        //Needs Refactoring wont meet requirements
         List<ItemController> _inventory = new List<ItemController>();
 
         //Fields
-        new float _moveSpeed = 2.5f;
         float _dashSpeed = 100f;
+
+        //counters
+        float _timeSinceLastDash = 0f;
+        float _timeSinceLastSwitchHotBar = 0f;
+        float _timeSinceLastAttack = 0f;
+
+        //cooldowns
         float _dashColldown = 150f;
-        float _timeSinceLastDash = 0;
+        float _switchHotBarColldown = 15f;
+        float _attackColldown = 45f;
         //Property
         public int Stamina { get; set; }
         public PlayerController(Texture2D texture, int scale, Vector2 positions, ContentManager contentManager) : base(texture, scale, positions, contentManager)
-        { }
+        {
+            _moveSpeed = 2.5f;
+        }
         public override void Update()
         {
             HandleInput();
             ItemController heldItem = _hotBar[_currentHotBarIndex];
             heldItem.Update(_position);
             _timeSinceLastDash++;
+            _timeSinceLastAttack++;
+            _timeSinceLastSwitchHotBar++;
         }
 
         public override void HandleInput()
@@ -56,38 +66,42 @@ namespace UndyingWill2D.Controllers
             {
                 _moveDirection.X += 1;
             }
-            if (mouseState.LeftButton == ButtonState.Pressed) 
+            if (_timeSinceLastAttack >= _attackColldown && mouseState.LeftButton == ButtonState.Pressed) 
             {
+                _timeSinceLastAttack = 0f;
                 OnAttack(mouseState.Position); 
             }
             if (_timeSinceLastDash >= _dashColldown && keyboardState.IsKeyDown(Keys.LeftShift)) 
             {
-                _timeSinceLastDash = 0;
+                _timeSinceLastDash = 0f;
                 OnDash(_moveDirection);
             }
             if (mouseState.RightButton == ButtonState.Pressed) 
             {
                 OnBlock(mouseState.Position); 
             }
-            if (keyboardState.IsKeyDown(Keys.D1))
+            if (_timeSinceLastSwitchHotBar >= _switchHotBarColldown)
             {
-                ChangeHotBarItem(0);
-            }
-            if (keyboardState.IsKeyDown(Keys.D2))
-            {
-                ChangeHotBarItem(1);
-            }
-            if (keyboardState.IsKeyDown(Keys.D3))
-            {
-                ChangeHotBarItem(2);
-            }
-            if (keyboardState.IsKeyDown(Keys.F))
-            {
-                OnInteract();
-            }
-            if (keyboardState.IsKeyDown(Keys.Q))
-            {
-                _moveDirection.X += 1;
+                if (keyboardState.IsKeyDown(Keys.D1))
+                {
+                    ChangeHotBarItem(0);
+                }
+                if (keyboardState.IsKeyDown(Keys.D2))
+                {
+                    ChangeHotBarItem(1);
+                }
+                if (keyboardState.IsKeyDown(Keys.D3))
+                {
+                    ChangeHotBarItem(2);
+                }
+                if (keyboardState.IsKeyDown(Keys.F))
+                {
+                    OnInteract();
+                }
+                if (keyboardState.IsKeyDown(Keys.Q))
+                {
+                    _moveDirection.X += 1;
+                }
             }
             OnMove(_moveDirection, _moveSpeed);
         }
@@ -96,7 +110,7 @@ namespace UndyingWill2D.Controllers
         {
             if (moveDirection == Vector2.Zero) { IsMoving = false; }
             else { IsMoving = true; }
-            AnimationManager.Update(IsMoving);
+            WalkAnimationManager.Update(IsMoving);
             if (moveDirection != Vector2.Zero)
             {
                 moveDirection.Normalize();

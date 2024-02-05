@@ -1,0 +1,61 @@
+﻿using Microsoft.Xna.Framework;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics.Metrics;
+using System.Drawing;
+using System.Linq;
+using System.Numerics;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace UndyingWill2D.Managers
+{
+    public class WalkAnimationManager : AnimationManager 
+    {
+        protected bool IsMoving { get; set; }
+        public WalkAnimationManager(int numberOfFrames, int numberOfColumns, Microsoft.Xna.Framework.Vector2 spriteResolution, int startColumn) : base(numberOfFrames, numberOfColumns, spriteResolution, startColumn)
+        {
+            this._numberOfFrames = numberOfFrames;
+            this._numberOfColumns = numberOfColumns;
+            this._spriteResolution = spriteResolution;
+            this._startColumn = startColumn;
+
+            _frameCount = 0;
+            _currentFrame = 0;
+            _animationInterval = 15;
+
+            _rowPosition = 0;
+            _columnPosition = startColumn;
+        }
+        public void Update(bool isMoving)
+        {
+            IsMoving = isMoving;
+            _frameCount++;
+            if (_frameCount > _animationInterval)
+            {
+                _frameCount = 0;
+                NewWalkFrame();
+            }
+        }
+        private void NewWalkFrame()
+        {
+            _currentFrame++;
+            _columnPosition++;
+            if (!IsMoving)
+            {
+                _columnPosition = 0;
+                _rowPosition = 0;
+                return;
+            }
+            if (_currentFrame >= _numberOfFrames)
+            {
+                ResetAnimation();
+            }
+            if (_columnPosition >= _numberOfColumns)
+            {
+                _columnPosition = 0;
+                _rowPosition++;
+            }
+        }
+    }
+}
