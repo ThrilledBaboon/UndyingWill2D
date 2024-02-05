@@ -16,12 +16,15 @@ namespace UndyingWill2D.Controllers
     public class PlayerController : EntityController
     {
         //Needs Refactoring wont meet requirements
+        List<ItemController> _inventory = new List<ItemController>();
+        List<ItemController> _hotBar = new List<ItemController>();
 
         //Fields
         new float _moveSpeed = 2.5f;
         float _dashSpeed = 100f;
         float _dashColldown = 150f;
         float _timeSinceLastDash = 0;
+        int _currentHotBarSlot = 0;
         //Property
         public int Stamina { get; set; }
         public PlayerController(Texture2D texture, int scale, Vector2 positions, ContentManager contentManager) : base(texture, scale, positions, contentManager)
@@ -67,6 +70,26 @@ namespace UndyingWill2D.Controllers
             {
                 OnBlock(mouseState.Position); 
             }
+            if (keyboardState.IsKeyDown(Keys.D1))
+            {
+                ChangeHotBarItem(1);
+            }
+            if (keyboardState.IsKeyDown(Keys.D2))
+            {
+                ChangeHotBarItem(2);
+            }
+            if (keyboardState.IsKeyDown(Keys.D3))
+            {
+                ChangeHotBarItem(3);
+            }
+            if (keyboardState.IsKeyDown(Keys.F))
+            {
+                OnInteract();
+            }
+            if (keyboardState.IsKeyDown(Keys.Q))
+            {
+                _moveDirection.X += 1;
+            }
             OnMove(_moveDirection, _moveSpeed);
         }
 
@@ -91,6 +114,46 @@ namespace UndyingWill2D.Controllers
         public override void OnBlock(Point point)
         {
 
+        }
+
+        public void ChangeHotBarItem(int index)
+        {
+            _currentHotBarSlot = index;
+        }
+        public void OnInteract()
+        {
+            if (FindInteractablesInRange() == false) { return; }
+            if (FindInteractablesInRange() == true)
+            {
+                object closestInteractable = ClosestInteractable();
+                if (closestInteractable.GetType == GetType(ItemController))
+                {
+                    _hotBar.Add(closestInteractable);
+                }
+            }
+            // this will need to do a lot:
+            // - open doors
+            // - pick up items on the floor
+            // - open shop
+
+            // will likely need to check closest interactable
+            // sounds like i will need an interactable class as well then 
+        }
+
+        private bool FindInteractablesInRange()
+        {
+            throw new NotImplementedException();
+        }
+
+        private object ClosestInteractable()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void OnDrop()
+        {
+            _hotBar.RemoveAt(_currentHotBarSlot - 1);
+            // needs to use current hotbar slot and remove it from list
         }
     }
 }
