@@ -32,7 +32,7 @@ namespace UndyingWill2D
         protected override void Initialize()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-            _level = new LevelManager(_spriteBatch, Content, _screenWidth, _screenHeight);
+            _level = new LevelManager(Content, _screenWidth, _screenHeight);
             _level.Initialise();
             base.Initialize();
         }
