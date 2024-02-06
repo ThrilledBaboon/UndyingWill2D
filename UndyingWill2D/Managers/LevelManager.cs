@@ -36,7 +36,7 @@ namespace UndyingWill2D.Managers
         public void Initialise()
         {
             //LevelGeneration()
-            _roomManager = new RoomManager(_contentManager);
+            _roomManager = new RoomManager(_contentManager, Vector2.Zero);
             _roomManager.Initialise();
             PlayerAnimation = _contentManager.Load<Texture2D>("PlayerAnimation");
             _player = new PlayerController(PlayerAnimation, 90, new Vector2(_screenWidth / 2, _screenHeight / 2), _contentManager);
@@ -67,7 +67,7 @@ namespace UndyingWill2D.Managers
             //    room = _rooms[roomIndex]
             //    floors = room.Floors;
             //    objectsInRoom = room.ObjectsInRoom;
-            //    walls = room.Walls;
+            //    walls = room.Walls; 
             //    entities = room.Entities;
             //    for (int floorIndex; floorIndex < floors.Count(); floorIndex++)
             //    {

@@ -17,7 +17,8 @@ namespace UndyingWill2D.Controllers
         protected Vector2 _position;
         protected int _scale;
         protected ContentManager _contentManager;
-        
+
+        public Vector2 Position { get { return _position; } set { _position = value; } }
         public Rectangle Rectangle { get { return new Rectangle((int)_position.X, (int)_position.Y, _scale, _scale); } }
 
         public SpriteController(Texture2D texture, int scale, Vector2 position, ContentManager contentManager)

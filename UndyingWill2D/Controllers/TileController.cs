@@ -10,7 +10,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace UndyingWill2D.Controllers
 {
-    internal class TileController : SpriteController
+    public class TileController : SpriteController
     {     
         public TileController(Texture2D texture, int scale, Vector2 position, ContentManager contentManager) : base(texture, scale, position, contentManager)
         { }
