@@ -15,7 +15,7 @@ namespace UndyingWill2D.Managers
     public class LevelManager
     {
         private List<EntityController> _controllers;
-        //List<TileController> _tiles;
+        List<RoomManager> _rooms;
 
         PlayerController _player;
         ContentManager _contentManager;
@@ -24,7 +24,6 @@ namespace UndyingWill2D.Managers
         int _screenWidth;
         int _screenHeight;
 
-        //Texture2D FloorTile;
         Texture2D PlayerAnimation;
 
         public LevelManager(ContentManager contentManager, int screenWidth, int screenHeight) 
@@ -36,23 +35,61 @@ namespace UndyingWill2D.Managers
 
         public void Initialise()
         {
+            //LevelGeneration()
             _roomManager = new RoomManager(_contentManager);
             _roomManager.Initialise();
             PlayerAnimation = _contentManager.Load<Texture2D>("PlayerAnimation");
             _player = new PlayerController(PlayerAnimation, 90, new Vector2(_screenWidth / 2, _screenHeight / 2), _contentManager);
 
         }
-        public void LoadContent()
-        {
-            _player.LoadContent();
+        private void LevelGeneration()
+        { 
+
         }
-        public void Update() 
+        private void CreateRoom()
+        {
+
+        }
+        public void Update()
         {
             _roomManager.Update();
             _player.Update();
         }
+        public void LoadContent()
+        {
+            _roomManager.LoadContent();
+            _player.LoadContent();
+        }
         public void Draw(SpriteBatch spriteBatch)
         {
+            //for (int roomIndex; roomIndex < _rooms.Count(); roomIndex++)
+            //{
+            //    room = _rooms[roomIndex]
+            //    floors = room.Floors;
+            //    objectsInRoom = room.ObjectsInRoom;
+            //    walls = room.Walls;
+            //    entities = room.Entities;
+            //    for (int floorIndex; floorIndex < floors.Count(); floorIndex++)
+            //    {
+            //        object = floors[floorIndex];
+            //        Object.Draw();
+            //    }
+            //    for (int i; i < objectsInRoom.Count(); i++)
+            //    {
+            //        object = objectsInRoom[i];
+            //        Object.Draw();
+            //    }
+            //    for (int i; i < walls.Count(); i++)
+            //    {
+            //        object = _walls[i];
+            //        Object.Draw();
+            //    }
+            //    for (int i; i < entities.Count(); i++)
+            //    {
+            //        object = entities[i];
+            //        Object.Draw();
+            //    }
+            //}
             _roomManager.Draw(spriteBatch);
             _player.Draw(spriteBatch);
         }
