@@ -17,7 +17,6 @@ namespace UndyingWill2D.Controllers
         protected Vector2 _position;
         protected int _scale;
         protected ContentManager _contentManager;
-        protected SpriteBatch _spriteBatch;
         
         public Rectangle Rectangle { get { return new Rectangle((int)_position.X, (int)_position.Y, _scale, _scale); } }
 

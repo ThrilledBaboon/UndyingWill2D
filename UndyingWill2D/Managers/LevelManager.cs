@@ -8,10 +8,11 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using UndyingWill2D.Controllers;
+using UndyingWill2D;
 
 namespace UndyingWill2D.Managers
 {
-    internal class LevelManager
+    public class LevelManager
     {
         private List<EntityController> _controllers;
         List<TileController> _tiles;
@@ -21,11 +22,22 @@ namespace UndyingWill2D.Managers
         SpriteBatch _spriteBatch;
         ContentManager _contentManager;
 
-        public LevelManager(SpriteBatch spriteBatch, ContentManager contentManager) { this._spriteBatch = spriteBatch; this._contentManager = contentManager; }
+        int _screenWidth;
+        int _screenHeight;
+
+        Texture2D FloorTile;
+        Texture2D Player;
+        Texture2D PlayerAnimation;
+
+        public LevelManager(SpriteBatch spriteBatch, ContentManager contentManager, int screenWidth, int screenHeight) 
+        { this._spriteBatch = spriteBatch; this._contentManager = contentManager;
+            this._screenWidth = screenWidth; this._screenHeight = screenHeight;
+        }
 
         public void Initialise()
         {
-            FloorTile = Content.Load<Texture2D>("FloorTile");
+
+            FloorTile = _contentManager.Load<Texture2D>("FloorTile");
             _tiles = new List<TileController>();
             for (int i = 0; i < 30; i++)
             {
@@ -34,12 +46,12 @@ namespace UndyingWill2D.Managers
                     int scale = 50;
                     float currentXPosition = j * scale;
                     float currentYPosition = i * scale;
-                    _floor = new TileController(FloorTile, scale, new Vector2(currentXPosition, currentYPosition), Content);
+                    _floor = new TileController(FloorTile, scale, new Vector2(currentXPosition, currentYPosition), _contentManager);
                     _tiles.Add(_floor);
                 }
             }
-            PlayerAnimation = Content.Load<Texture2D>("PlayerAnimation");
-            _player = new PlayerController(PlayerAnimation, 90, new Vector2(_screenWidth / 2, _screenHeight / 2), Content);
+            PlayerAnimation = _contentManager.Load<Texture2D>("PlayerAnimation");
+            _player = new PlayerController(PlayerAnimation, 90, new Vector2(_screenWidth / 2, _screenHeight / 2), _contentManager);
 
         }
         public void LoadContent()
@@ -55,14 +67,14 @@ namespace UndyingWill2D.Managers
             //currentObject.Update();
             //}
         }
-        public void Draw()
+        public void Draw(SpriteBatch spriteBatch)
         {
             for (int i = 0; i < _tiles.Count; i++)
             {
                 TileController floor = _tiles[i];
-                floor.Draw(_spriteBatch);
+                floor.Draw(spriteBatch);
             }
-            _player.Draw(_spriteBatch);
+            _player.Draw(spriteBatch);
         }
     }
 }

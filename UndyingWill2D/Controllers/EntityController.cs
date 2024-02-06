@@ -23,6 +23,9 @@ namespace UndyingWill2D.Controllers
         protected float _moveSpeed;
         protected List<ItemController> _hotBar = new List<ItemController>();
         protected int _currentHotBarIndex;
+
+        public Texture2D PlayerAnimation { get; private set; }
+
         //Property
         public WalkAnimationManager WalkAnimationManager { get; private set; }
         public bool IsMoving { get; set; }
@@ -56,6 +59,7 @@ namespace UndyingWill2D.Controllers
 
         public void LoadContent()
         {
+            PlayerAnimation = _contentManager.Load<Texture2D>("PlayerAnimation");
             WalkAnimationManager = new(2, 2, new Vector2(32, 32), 1);
         }
         public override void Draw(SpriteBatch spriteBatch)
