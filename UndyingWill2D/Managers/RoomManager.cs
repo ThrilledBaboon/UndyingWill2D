@@ -46,7 +46,7 @@ namespace UndyingWill2D.Managers
         {
             for (int i = 0; i < 9; i++)
             {
-                for (int j = 0; j < 14; j++)
+                for (int j = 0; j < 13; j++)
                 {
                     int scale = 50;
                     float roomXPosition = j;
@@ -99,18 +99,17 @@ namespace UndyingWill2D.Managers
                 {
                     currentObjectPosition.X = _roomOrigin.X + currentObject.Scale * -(6 - currentObjectPosition.X);
                 }
-                else if (currentObjectPosition.X <= 13)
+                else if (currentObjectPosition.X <= 12)
                 {
                     currentObjectPosition.X = _roomOrigin.X + currentObject.Scale * (currentObjectPosition.X - 6);
                 }
-
                 if (currentObjectPosition.Y <= 4)
                 {
-                    currentObjectPosition.Y = _roomOrigin.Y + currentObject.Scale * -(4 - currentObjectPosition.Y);
+                   currentObjectPosition.Y = _roomOrigin.Y + currentObject.Scale * -(4 - currentObjectPosition.Y);
                 }
-                else
+                else if (currentObjectPosition.Y <= 8)
                 {
-                    currentObjectPosition.Y = _roomOrigin.Y + currentObject.Scale * currentObjectPosition.Y;
+                   currentObjectPosition.Y = _roomOrigin.Y + currentObject.Scale * (currentObjectPosition.Y - 4);
                 }
             
                 currentObject.Position = currentObjectPosition;
@@ -121,16 +120,16 @@ namespace UndyingWill2D.Managers
             //    SpriteController currentObject = _objectsInRoom[i];
             //    currentObject.Draw(spriteBatch);
             //}
-            for (int i = 0; i < _walls.Count(); i++)
-            {
-                TileController currentObject = _walls[i];
-                currentObject.Draw(spriteBatch);
-            }
-            for (int i = 0; i < _entities.Count(); i++)
-            {
-                EntityController currentObject = _entities[i];
-                currentObject.Draw(spriteBatch);
-            }
+            //for (int i = 0; i < _walls.Count(); i++)
+            //{
+            //    TileController currentObject = _walls[i];
+            //    currentObject.Draw(spriteBatch);
+            //}
+            //for (int i = 0; i < _entities.Count(); i++)
+            //{
+            //    EntityController currentObject = _entities[i];
+            //    currentObject.Draw(spriteBatch);
+            //}
         }
     }
 }
