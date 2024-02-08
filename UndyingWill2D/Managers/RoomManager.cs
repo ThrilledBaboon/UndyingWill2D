@@ -94,6 +94,16 @@ namespace UndyingWill2D.Managers
             {
                 TileController currentObject = _floors[floorIndex];
                 //mapping local grid to actual coordinates function called here
+                Vector2 currentObjectPosition = currentObject.Position;
+                if (currentObjectPosition.X < 6)
+                {
+                    currentObjectPosition.X = _roomOrigin.X + _scale * -(6 - currentObjectPosition.X);
+                }
+                if (currentObjectPosition.Y < 4)
+                {
+                    currentObjectPosition.Y = _roomOrigin.Y + _scale * -(4 - currentObjectPosition.Y);
+                }
+                currentObject.Position = currentObjectPosition;
                 currentObject.Draw(spriteBatch);
             }
             //for (int i = 0; i < _objectsInRoom.Count(); i++)

@@ -51,7 +51,7 @@ namespace UndyingWill2D
         }
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Black);
             _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
             _level.Draw(_spriteBatch);
             _spriteBatch.End(); 
