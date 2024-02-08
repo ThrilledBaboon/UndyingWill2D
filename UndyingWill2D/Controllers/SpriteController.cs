@@ -18,6 +18,7 @@ namespace UndyingWill2D.Controllers
         protected int _scale;
         protected ContentManager _contentManager;
 
+        public int Scale { get { return _scale; } set { _scale = value; } }
         public Vector2 Position { get { return _position; } set { _position = value; } }
         public Rectangle Rectangle { get { return new Rectangle((int)_position.X, (int)_position.Y, _scale, _scale); } }
 
