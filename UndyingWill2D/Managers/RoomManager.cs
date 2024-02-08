@@ -99,10 +99,11 @@ namespace UndyingWill2D.Managers
                 {
                     currentObjectPosition.X = _roomOrigin.X + currentObject.Scale * -(6 - currentObjectPosition.X);
                 }
-                else
+                else if (currentObjectPosition.X <= 13)
                 {
-                    currentObjectPosition.X = _roomOrigin.X + currentObject.Scale * currentObjectPosition.X;
+                    currentObjectPosition.X = _roomOrigin.X + currentObject.Scale * (currentObjectPosition.X - 6);
                 }
+
                 if (currentObjectPosition.Y <= 4)
                 {
                     currentObjectPosition.Y = _roomOrigin.Y + currentObject.Scale * -(4 - currentObjectPosition.Y);
