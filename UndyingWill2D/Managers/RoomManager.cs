@@ -44,9 +44,9 @@ namespace UndyingWill2D.Managers
         }
         public void CreateFloor()
         {
-            for (int i = 0; i < 9; i++)
+            for (int i = 0; i < 11; i++)
             {
-                for (int j = 0; j < 13; j++)
+                for (int j = 0; j < 15; j++)
                 {
                     int scale = 50;
                     float roomXPosition = j;
@@ -95,21 +95,21 @@ namespace UndyingWill2D.Managers
                 TileController currentObject = _floors[floorIndex];
                 //mapping local grid to actual coordinates function called here
                 Vector2 currentObjectPosition = currentObject.Position;
-                if (currentObjectPosition.X <= 6)
+                if (currentObjectPosition.X <= 7)
                 {
-                    currentObjectPosition.X = _roomOrigin.X + currentObject.Scale * -(6 - currentObjectPosition.X);
+                    currentObjectPosition.X = _roomOrigin.X + currentObject.Scale * -(7 - currentObjectPosition.X);
                 }
-                else if (currentObjectPosition.X <= 12)
+                else if (currentObjectPosition.X <= 15)
                 {
-                    currentObjectPosition.X = _roomOrigin.X + currentObject.Scale * (currentObjectPosition.X - 6);
+                    currentObjectPosition.X = _roomOrigin.X + currentObject.Scale * (currentObjectPosition.X - 7);
                 }
-                if (currentObjectPosition.Y <= 4)
+                if (currentObjectPosition.Y <= 5)
                 {
-                   currentObjectPosition.Y = _roomOrigin.Y + currentObject.Scale * -(4 - currentObjectPosition.Y);
+                   currentObjectPosition.Y = _roomOrigin.Y + currentObject.Scale * -(5 - currentObjectPosition.Y);
                 }
-                else if (currentObjectPosition.Y <= 8)
+                else if (currentObjectPosition.Y <= 11)
                 {
-                   currentObjectPosition.Y = _roomOrigin.Y + currentObject.Scale * (currentObjectPosition.Y - 4);
+                   currentObjectPosition.Y = _roomOrigin.Y + currentObject.Scale * (currentObjectPosition.Y - 5);
                 }
             
                 currentObject.Position = currentObjectPosition;
