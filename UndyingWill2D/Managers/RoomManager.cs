@@ -97,11 +97,11 @@ namespace UndyingWill2D.Managers
                 Vector2 currentObjectPosition = currentObject.Position;
                 if (currentObjectPosition.X < 6)
                 {
-                    currentObjectPosition.X = _roomOrigin.X + _scale * -(6 - currentObjectPosition.X);
+                    currentObjectPosition.X = _roomOrigin.X + currentObject.Scale * -(6 - currentObjectPosition.X);
                 }
                 if (currentObjectPosition.Y < 4)
                 {
-                    currentObjectPosition.Y = _roomOrigin.Y + _scale * -(4 - currentObjectPosition.Y);
+                    currentObjectPosition.Y = _roomOrigin.Y + currentObject.Scale * -(4 - currentObjectPosition.Y);
                 }
                 currentObject.Position = currentObjectPosition;
                 currentObject.Draw(spriteBatch);
