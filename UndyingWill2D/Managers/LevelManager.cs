@@ -16,7 +16,6 @@ namespace UndyingWill2D.Managers
     {
         private List<EntityController> _controllers;
         List<RoomManager> _rooms;
-
         PlayerController _player;
         ContentManager _contentManager;
         RoomManager _roomManager;
@@ -35,20 +34,20 @@ namespace UndyingWill2D.Managers
 
         public void Initialise()
         {
-            //LevelGeneration()
-            _roomManager = new RoomManager(_contentManager, new Vector2(_screenWidth / 2, _screenHeight / 2));
-            _roomManager.Initialise();
+            LevelGeneration();
             PlayerAnimation = _contentManager.Load<Texture2D>("PlayerAnimation");
             _player = new PlayerController(PlayerAnimation, 90, new Vector2(_screenWidth / 2, _screenHeight / 2), _contentManager);
 
         }
         private void LevelGeneration()
-        { 
-
-        }
-        private void CreateRoom()
         {
-
+            LevelGenerationManager levelGenerationManager = new LevelGenerationManager();
+            _roomManager = new RoomManager(_contentManager, new Vector2(0, 0), new Vector2(_screenWidth / 2, _screenHeight / 2));
+            _rooms.Add(_roomManager);
+            _roomManager.Initialise();
+            //create start room
+            //create shop room
+            //gen the rest of the rooms
         }
         public void Update()
         {
@@ -62,35 +61,8 @@ namespace UndyingWill2D.Managers
         }
         public void Draw(SpriteBatch spriteBatch)
         {
-            //for (int roomIndex; roomIndex < _rooms.Count(); roomIndex++)
-            //{
-            //    room = _rooms[roomIndex]
-            //    floors = room.Floors;
-            //    objectsInRoom = room.ObjectsInRoom;
-            //    walls = room.Walls; 
-            //    entities = room.Entities;
-            //    for (int floorIndex; floorIndex < floors.Count(); floorIndex++)
-            //    {
-            //        object = floors[floorIndex];
-            //        Object.Draw();
-            //    }
-            //    for (int i; i < objectsInRoom.Count(); i++)
-            //    {
-            //        object = objectsInRoom[i];
-            //        Object.Draw();
-            //    }
-            //    for (int i; i < walls.Count(); i++)
-            //    {
-            //        object = _walls[i];
-            //        Object.Draw();
-            //    }
-            //    for (int i; i < entities.Count(); i++)
-            //    {
-            //        object = entities[i];
-            //        Object.Draw();
-            //    }
-            //}
-            _roomManager.Draw(spriteBatch);
+            int currentRoomIndex = _rooms.Find(_roomManager);
+            _rooms[currentRoomIndex].Draw(spriteBatch);
             _player.Draw(spriteBatch);
         }
     }
