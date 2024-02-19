@@ -23,7 +23,7 @@ namespace UndyingWill2D.Managers
         int _screenWidth;
         int _screenHeight;
 
-        Texture2D PlayerAnimation;
+        Texture2D _playerAnimation;
 
         public LevelManager(ContentManager contentManager, int screenWidth, int screenHeight) 
         { 
@@ -35,34 +35,29 @@ namespace UndyingWill2D.Managers
         public void Initialise()
         {
             LevelGeneration();
-            PlayerAnimation = _contentManager.Load<Texture2D>("PlayerAnimation");
-            _player = new PlayerController(PlayerAnimation, 90, new Vector2(_screenWidth / 2, _screenHeight / 2), _contentManager);
+            _playerAnimation = _contentManager.Load<Texture2D>("PlayerAnimation");
+            _player = new PlayerController(_playerAnimation, 90, new Vector2(_screenWidth / 2, _screenHeight / 2), _contentManager);
 
         }
         private void LevelGeneration()
         {
-            LevelGenerationManager levelGenerationManager = new LevelGenerationManager();
-            _roomManager = new RoomManager(_contentManager, new Vector2(0, 0), new Vector2(_screenWidth / 2, _screenHeight / 2));
-            _rooms.Add(_roomManager);
-            _roomManager.Initialise();
-            //create start room
-            //create shop room
-            //gen the rest of the rooms
+            LevelGenerationManager levelGenerationManager = new LevelGenerationManager(_contentManager, _screenWidth, _screenHeight);
+            _rooms = levelGenerationManager.LevelGeneration();
         }
         public void Update()
         {
-            _roomManager.Update();
+            //_roomManager.Update();
             _player.Update();
         }
         public void LoadContent()
         {
-            _roomManager.LoadContent();
+            //_roomManager.LoadContent();
             _player.LoadContent();
         }
         public void Draw(SpriteBatch spriteBatch)
         {
-            int currentRoomIndex = _rooms.Find(_roomManager);
-            _rooms[currentRoomIndex].Draw(spriteBatch);
+            //int currentRoomIndex = _rooms.Find();
+            //_rooms[currentRoomIndex].Draw(spriteBatch);
             _player.Draw(spriteBatch);
         }
     }
