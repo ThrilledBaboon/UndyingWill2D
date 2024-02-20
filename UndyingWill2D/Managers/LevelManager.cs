@@ -25,6 +25,8 @@ namespace UndyingWill2D.Managers
 
         Texture2D _playerAnimation;
 
+        int _currentRoomIndex;
+
         public LevelManager(ContentManager contentManager, int screenWidth, int screenHeight) 
         { 
             this._contentManager = contentManager;
@@ -46,6 +48,7 @@ namespace UndyingWill2D.Managers
         }
         public void Update()
         {
+            _currentRoomIndex = 0;
             //_roomManager.Update();
             _player.Update();
         }
@@ -56,8 +59,7 @@ namespace UndyingWill2D.Managers
         }
         public void Draw(SpriteBatch spriteBatch)
         {
-            //int currentRoomIndex = _rooms.Find();
-            //_rooms[currentRoomIndex].Draw(spriteBatch);
+            _rooms[_currentRoomIndex].Draw(spriteBatch);
             _player.Draw(spriteBatch);
         }
     }

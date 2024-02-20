@@ -32,7 +32,7 @@ namespace UndyingWill2D.Managers
         {
             get
             {
-                if(_childDirections == null)
+                if(_childDirections.Count == 0)
                 {
                     List<Vector2> childDirections = CreateChildDirections();
                     return childDirections;
@@ -40,16 +40,17 @@ namespace UndyingWill2D.Managers
                 return _childDirections;
             }
         }
+        int? _numberOfMaxChildren;
         public int? NumberOfMaxChildren
         {
             get
             {
-                if (NumberOfMaxChildren == null) 
+                if (_numberOfMaxChildren == null) 
                 {
                     int numberOfChildren = CreateNumberOfMaxChildren();
                     return numberOfChildren;
                 }
-                return NumberOfMaxChildren;
+                return _numberOfMaxChildren;
             } 
         }
         public RoomManager(ContentManager contentManager, Vector2 origin, Vector2 screenPosition) 
