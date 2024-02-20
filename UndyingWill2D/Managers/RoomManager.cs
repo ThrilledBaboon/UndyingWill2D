@@ -25,9 +25,33 @@ namespace UndyingWill2D.Managers
         Texture2D _bottomWallTile;
         ContentManager _contentManager;
         Vector2 _screenPosition;
+        Random _random = new Random();
         public Vector2 RoomOrigin {  get; set; }
-
-
+        List<Vector2> _childDirections = new List<Vector2>();
+        public List<Vector2> ChildDirections
+        {
+            get
+            {
+                if(_childDirections == null)
+                {
+                    List<Vector2> childDirections = CreateChildDirections();
+                    return childDirections;
+                }
+                return _childDirections;
+            }
+        }
+        public int? NumberOfMaxChildren
+        {
+            get
+            {
+                if (NumberOfMaxChildren == null) 
+                {
+                    int numberOfChildren = CreateNumberOfMaxChildren();
+                    return numberOfChildren;
+                }
+                return NumberOfMaxChildren;
+            } 
+        }
         public RoomManager(ContentManager contentManager, Vector2 origin, Vector2 screenPosition) 
         { 
             this._contentManager = contentManager;
@@ -46,6 +70,8 @@ namespace UndyingWill2D.Managers
             CreateFloor();
             CreateWalls();
             CreateEntities();
+
+            CreateChildDirections();
         }
         public void CreateFloor()
         {
@@ -104,9 +130,50 @@ namespace UndyingWill2D.Managers
         { 
             //to do
         }
-        public void GetWalls()
+        public int CreateNumberOfMaxChildren()
         {
 
+            int[] numberOfPossibleChildren = { 2, 3, 4 };
+            int[] distribution = { 4, 3, 3 };
+            List<int> numberOfPossibleChildrenDistribution = new List<int>();
+            for (int currentDistributionIndex = 0; currentDistributionIndex < distribution.Count(); currentDistributionIndex++)
+            {
+                for (int currentnumberOfPossibleChildrenIndex = 0; currentnumberOfPossibleChildrenIndex < numberOfPossibleChildren.Count(); currentnumberOfPossibleChildrenIndex++)
+                {
+                    int value = numberOfPossibleChildren[currentnumberOfPossibleChildrenIndex];
+                    numberOfPossibleChildrenDistribution.Add(value);
+                }
+            }
+            int numberOfMaxChildrenIndex = _random.Next(numberOfPossibleChildrenDistribution.Count - 1);
+            int numberOfMaxChildren = numberOfPossibleChildrenDistribution[numberOfMaxChildrenIndex];
+            return numberOfMaxChildren;
+        }
+        public List<Vector2> CreateChildDirectionsDistribution()
+        {
+            Vector2[] possibleDirections = { new Vector2(0,-1), new Vector2(0,1), new Vector2(-1,0), new Vector2(1,0) };
+            int[] distribution = { 4, 3, 3 };
+            List<Vector2> possibleDirectionsOfChildrenDistribution = new List<Vector2>();
+            for (int currentDistributionIndex = 0; currentDistributionIndex < distribution.Count(); currentDistributionIndex++)
+            {
+                for (int currentdirectionIndex = 0; currentdirectionIndex < possibleDirections.Count(); currentdirectionIndex++)
+                {
+                    Vector2 value = possibleDirections[currentdirectionIndex];
+                    possibleDirectionsOfChildrenDistribution.Add(value);
+                }
+            }
+            return possibleDirectionsOfChildrenDistribution;
+        }
+        public List<Vector2> CreateChildDirections() 
+        {
+            List<Vector2> childDirections = new List<Vector2>();
+            List<Vector2> childDirectionsDistribution = CreateChildDirectionsDistribution();
+            for (int numberOfChildren = 0; numberOfChildren < NumberOfMaxChildren; numberOfChildren++) 
+            {
+                int directionIndex = _random.Next(childDirectionsDistribution.Count - 1);
+                Vector2 directon = childDirectionsDistribution[directionIndex];
+                childDirections.Add(directon);
+            }
+            return childDirections;
         }
         public void AddEntity()
         {
