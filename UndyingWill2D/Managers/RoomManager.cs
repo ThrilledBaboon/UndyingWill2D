@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -137,12 +138,11 @@ namespace UndyingWill2D.Managers
             int[] numberOfPossibleChildren = { 2, 3, 4 };
             int[] distribution = { 4, 3, 3 };
             List<int> numberOfPossibleChildrenDistribution = new List<int>();
-            for (int currentDistributionIndex = 0; currentDistributionIndex < distribution.Count(); currentDistributionIndex++)
+            foreach(int DistributionIndex in distribution)
             {
-                for (int currentnumberOfPossibleChildrenIndex = 0; currentnumberOfPossibleChildrenIndex < numberOfPossibleChildren.Count(); currentnumberOfPossibleChildrenIndex++)
+                foreach(int possibleChild in numberOfPossibleChildren)
                 {
-                    int value = numberOfPossibleChildren[currentnumberOfPossibleChildrenIndex];
-                    numberOfPossibleChildrenDistribution.Add(value);
+                    numberOfPossibleChildrenDistribution.Add(possibleChild);
                 }
             }
             int numberOfMaxChildrenIndex = _random.Next(numberOfPossibleChildrenDistribution.Count - 1);
@@ -154,12 +154,11 @@ namespace UndyingWill2D.Managers
             Vector2[] possibleDirections = { new Vector2(0,-1), new Vector2(0,1), new Vector2(-1,0), new Vector2(1,0) };
             int[] distribution = { 4, 3, 3 };
             List<Vector2> possibleDirectionsOfChildrenDistribution = new List<Vector2>();
-            for (int currentDistributionIndex = 0; currentDistributionIndex < distribution.Count(); currentDistributionIndex++)
+            foreach(int DistributionIndex in  distribution)
             {
-                for (int currentdirectionIndex = 0; currentdirectionIndex < possibleDirections.Count(); currentdirectionIndex++)
+                foreach (Vector2 direction in possibleDirections)
                 {
-                    Vector2 value = possibleDirections[currentdirectionIndex];
-                    possibleDirectionsOfChildrenDistribution.Add(value);
+                    possibleDirectionsOfChildrenDistribution.Add(direction);
                 }
             }
             return possibleDirectionsOfChildrenDistribution;
@@ -206,8 +205,8 @@ namespace UndyingWill2D.Managers
             return spritePosition;
         }
         public void Update() 
-        { 
-        
+        {
+
         }
         public void LoadContent() 
         { 

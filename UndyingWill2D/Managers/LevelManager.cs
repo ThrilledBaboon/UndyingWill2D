@@ -9,23 +9,24 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using UndyingWill2D.Controllers;
 using UndyingWill2D;
+using System.Diagnostics;
 
 namespace UndyingWill2D.Managers
 {
     public class LevelManager
     {
         private List<EntityController> _controllers;
-        List<RoomManager> _rooms;
+        Dictionary<Vector2, RoomManager> _rooms;
         PlayerController _player;
         ContentManager _contentManager;
-        RoomManager _roomManager;
 
         int _screenWidth;
         int _screenHeight;
 
         Texture2D _playerAnimation;
 
-        int _currentRoomIndex;
+        Vector2 _currentRoomOrigin;
+        RoomManager _currentRoom;
 
         public LevelManager(ContentManager contentManager, int screenWidth, int screenHeight) 
         { 
@@ -37,6 +38,11 @@ namespace UndyingWill2D.Managers
         public void Initialise()
         {
             LevelGeneration();
+            foreach (var room in _rooms)
+            {
+                RoomManager actualRoom = room.Value;
+                actualRoom.Initialise();
+            }
             _playerAnimation = _contentManager.Load<Texture2D>("PlayerAnimation");
             _player = new PlayerController(_playerAnimation, 90, new Vector2(_screenWidth / 2, _screenHeight / 2), _contentManager);
 
@@ -48,18 +54,23 @@ namespace UndyingWill2D.Managers
         }
         public void Update()
         {
-            _currentRoomIndex = 0;
-            //_roomManager.Update();
+            _currentRoomOrigin = new Vector2(0, 0);
+            _currentRoom = _rooms[_currentRoomOrigin];
+            _currentRoom.Update();
             _player.Update();
         }
         public void LoadContent()
         {
-            //_roomManager.LoadContent();
+            foreach (var room in _rooms)
+            {
+                RoomManager actualRoom = room.Value;
+                actualRoom.Initialise();
+            }
             _player.LoadContent();
         }
         public void Draw(SpriteBatch spriteBatch)
         {
-            _rooms[_currentRoomIndex].Draw(spriteBatch);
+            _currentRoom.Draw(spriteBatch);
             _player.Draw(spriteBatch);
         }
     }
