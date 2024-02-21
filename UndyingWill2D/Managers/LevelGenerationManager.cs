@@ -64,12 +64,12 @@ namespace UndyingWill2D.Managers
                     try
                     {
                         _dictionaryOfRooms.Add(childRoom.RoomOrigin, childRoom);
-                        queueOfGeneratedRooms.Enqueue(childRoom);
                     }
                     catch (ArgumentException)
                     {
                         continue;
                     }
+                    queueOfGeneratedRooms.Enqueue(childRoom);
                 }
             }
             return _dictionaryOfRooms; 
