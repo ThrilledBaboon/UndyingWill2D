@@ -45,7 +45,6 @@ namespace UndyingWill2D.Managers
             }
             _playerAnimation = _contentManager.Load<Texture2D>("PlayerAnimation");
             _player = new PlayerController(_playerAnimation, 90, new Vector2(_screenWidth / 2, _screenHeight / 2), _contentManager);
-
         }
         private void LevelGeneration()
         {

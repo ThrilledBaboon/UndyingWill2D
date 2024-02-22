@@ -70,10 +70,13 @@ namespace UndyingWill2D.Managers
             _bottomWallTile = _contentManager.Load<Texture2D>("BottomWall");
             _floors = new List<TileController>();
             CreateChildDirections();
-
             CreateFloor();
             CreateWalls();
             CreateEntities();
+        }
+        public void RemoveDoorPossibility(Vector2 direction)
+        {
+            _wallsWhereDoorsCouldntBe.Remove(direction);
         }
         private void CreateFloor()
         {
@@ -93,45 +96,44 @@ namespace UndyingWill2D.Managers
         {
             TileController topWall = null;
             TileController bottomWall = null;
-            TileController leftsideWall = null;
+            TileController leftSideWall = null;
             TileController rightSideWall = null;
-            WallsWhereDoorsCouldntBe(topWall, bottomWall, leftsideWall, rightSideWall);
+            WallsWhereDoorsCouldntBe(topWall, bottomWall, leftSideWall, rightSideWall);
             CreateWall(_walls, topWall, _topWallTile, 0, 6, 50, 0);
             CreateWall(_walls, topWall, _topWallTile, 8, 14, 50, 0);
             CreateWall(_walls, bottomWall, _bottomWallTile, 0, 6, 50, 10);
             CreateWall(_walls, bottomWall, _bottomWallTile, 8, 14, 50, 10);
-            CreateWall(_walls, leftsideWall, _leftSideWallTile, 6, 11, 50, 0);
-            CreateWall(_walls, leftsideWall, _leftSideWallTile, 0, 5, 50, 0);
+            CreateWall(_walls, leftSideWall, _leftSideWallTile, 6, 11, 50, 0);
+            CreateWall(_walls, leftSideWall, _leftSideWallTile, 0, 5, 50, 0);
             CreateWall(_walls, rightSideWall, _rightSideWallTile, 6, 11, 50, 14);
             CreateWall(_walls, rightSideWall, _rightSideWallTile, 0, 5, 50, 14);
         }
-
         private void WallsWhereDoorsCouldntBe(TileController topWall,
         TileController bottomWall,
-        TileController leftsideWall,
+        TileController leftSideWall,
         TileController rightSideWall)
         {
             foreach (Vector2 wallDirection in _wallsWhereDoorsCouldntBe) 
             {
-                Vector2 position = (7, 6) * wallDirection;
-                switch (position)
+                Vector2 position = new Vector2(7, 6) * wallDirection;
+                String positionString = position.X.ToString() + ", " + position.Y.ToString();
+                switch (positionString)
                 {
-                    case (0, 6):
-                        CreateWall(_walls, bottomWall, _topWallTile, 0, 6, 50, 0);
-                    case (0, -6):
-                        CreateWall(_walls, topWall, _topWallTile, 0, -6, 50, 0);
-                    case (7, 0):
-                        CreateWall(_walls, leftsideWall, _topWallTile, 7, 0, 50, 0);
-                    case (-7, 0):
-                        CreateWall(_walls, leftsideWall, _topWallTile, -7, 0, 50, 0);
+                    case "0, 6":
+                        CreateWall(_walls, rightSideWall, _rightSideWallTile, 5, 6, 50, 14);
+                        break;
+                    case "0, -6":
+                        CreateWall(_walls, leftSideWall, _leftSideWallTile, 5, 6, 50, 0);
+                        break;
+                    case "7, 0":
+                        CreateWall(_walls, bottomWall, _bottomWallTile, 6, 7, 50, 10);
+                        break;
+                    case "-7, 0":
+                        CreateWall(_walls, topWall, _topWallTile, 6, 7, 50, 0);
+                        break;
                 }
             }
         }
-
-        //<summary>
-        //works but has AWFUL READABILITYaw
-        //will make the walls where i expect but it just a lot of ugly code
-        //</summary>
         private void CreateWall(List<TileController> List, 
             TileController TypeOfWall, Texture2D WallTile, 
             int lowerAxisCoordinate, int upperAxisCoordinate, int scale,
@@ -152,14 +154,11 @@ namespace UndyingWill2D.Managers
                 List.Add(TypeOfWall);
             }
         }
-
-        
-
-        public void CreateEntities() 
+        private void CreateEntities() 
         { 
             //to do
         }
-        public int CreateNumberOfMaxChildren()
+        private int CreateNumberOfMaxChildren()
         {
 
             int[] numberOfPossibleChildren = { 2, 3, 4 };
@@ -190,7 +189,7 @@ namespace UndyingWill2D.Managers
             }
             return possibleDirectionsOfChildrenDistribution;
         }
-        public List<Vector2> CreateChildDirections() 
+        private List<Vector2> CreateChildDirections() 
         {
             List<Vector2> childDirections = new List<Vector2>();
             List<Vector2> childDirectionsDistribution = CreateChildDirectionsDistribution();
@@ -199,7 +198,7 @@ namespace UndyingWill2D.Managers
                 int directionIndex = _random.Next(childDirectionsDistribution.Count - 1);
                 Vector2 direction = childDirectionsDistribution[directionIndex];
                 childDirections.Add(direction);
-                _wallsWhereDoorsCouldBe.Remove(direction);
+                _wallsWhereDoorsCouldntBe.Remove(direction);
             }
             return childDirections;
         }

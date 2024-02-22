@@ -15,10 +15,9 @@ namespace UndyingWill2D.Managers
     {
         Dictionary<Vector2, RoomManager> _dictionaryOfRooms;
         ContentManager _contentManager;
-        RoomManager _shopRoom;
+        RoomManager _startRoom;
         Vector2 _roomPosition;
         int _maxNumberOfRooms;
-
         Vector2 _up = new Vector2(0, -1);
         Vector2 _down = new Vector2(0, 1);
         Vector2 _left = new Vector2(-1, 0);
@@ -33,19 +32,16 @@ namespace UndyingWill2D.Managers
         {
             _maxNumberOfRooms = 25;
             _dictionaryOfRooms = new Dictionary<Vector2, RoomManager>();
-            RoomManager startRoom = new RoomManager(_contentManager, new Vector2(0, 0), _roomPosition);
-            _shopRoom = CreateRoom(startRoom, _right);
-            _dictionaryOfRooms.Add(startRoom.RoomOrigin, startRoom);
-            _dictionaryOfRooms.Add(_shopRoom.RoomOrigin, _shopRoom);
+            _startRoom = new RoomManager(_contentManager, new Vector2(0, 0), _roomPosition);
+
+            _dictionaryOfRooms.Add(_startRoom.RoomOrigin, _startRoom);
         }
         public Dictionary<Vector2, RoomManager> LevelGeneration()
         {
             RoomManager previousRoom = null;
             RoomManager parentRoom;
             Queue<RoomManager> queueOfGeneratedRooms = new Queue<RoomManager>();
-            RoomManager firstGeneratedRoom = CreateRoom(_shopRoom, _right);
-            _dictionaryOfRooms.Add(firstGeneratedRoom.RoomOrigin, firstGeneratedRoom);
-            queueOfGeneratedRooms.Enqueue(firstGeneratedRoom);
+            queueOfGeneratedRooms.Enqueue(_startRoom);
             while (_dictionaryOfRooms.Count < _maxNumberOfRooms)
             {
                 try
@@ -53,12 +49,12 @@ namespace UndyingWill2D.Managers
                     parentRoom = queueOfGeneratedRooms.Dequeue();
                     previousRoom = parentRoom;
                 }
-                catch (Exception e) 
+                catch (ArgumentException) 
                 {
                     parentRoom = previousRoom;
                 }
                 List<Vector2> directionsToTryGenerateRoomsIn = parentRoom.ChildDirections;
-                foreach(Vector2 direction in directionsToTryGenerateRoomsIn) 
+                foreach (Vector2 direction in directionsToTryGenerateRoomsIn) 
                 {
                     RoomManager childRoom = CreateRoom(parentRoom, direction);
                     try
@@ -69,6 +65,7 @@ namespace UndyingWill2D.Managers
                     {
                         continue;
                     }
+                    childRoom.RemoveDoorPossibility(direction);
                     queueOfGeneratedRooms.Enqueue(childRoom);
                 }
             }
@@ -76,10 +73,8 @@ namespace UndyingWill2D.Managers
         }
         public RoomManager CreateRoom(RoomManager ParentRoom, Vector2 SpawnDirection) 
         {
-            Vector2 parentRoomOrigin = ParentRoom.RoomOrigin;
-            Vector2 childRoomOrigin = parentRoomOrigin + SpawnDirection;
-            RoomManager room = new RoomManager(_contentManager, childRoomOrigin, _roomPosition);
-            return room;
+            Vector2 childRoomOrigin = ParentRoom.RoomOrigin + SpawnDirection;
+            return new RoomManager(_contentManager, childRoomOrigin, _roomPosition);
         }
     }
 }
