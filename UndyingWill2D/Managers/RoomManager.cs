@@ -120,7 +120,8 @@ namespace UndyingWill2D.Managers
             DoorController leftSideDoor = null;
             DoorController rightSideDoor = null;
             //WallsWhereDoorsCouldntBe(topWall, bottomWall, leftSideWall, rightSideWall);
-            DoorsWhereDoorsCanBe(topDoor, bottomDoor, leftSideDoor, rightSideDoor);
+            CreateDoors(topDoor, bottomDoor, leftSideDoor, rightSideDoor);
+            CreateWallsWhereDoorsArent(topWall, bottomWall, leftSideWall, rightSideWall);
             CreateWall(_walls, topWall, _topWallTile, 0, 6, 50, 0);
             CreateWall(_walls, topWall, _topWallTile, 8, 14, 50, 0);
             CreateWall(_walls, bottomWall, _bottomWallTile, 0, 6, 50, 10);
@@ -130,33 +131,36 @@ namespace UndyingWill2D.Managers
             CreateWall(_walls, rightSideWall, _rightSideWallTile, 6, 11, 50, 14);
             CreateWall(_walls, rightSideWall, _rightSideWallTile, 0, 5, 50, 14);
         }
-        //private void WallsWhereDoorsCouldntBe(TileController topWall,
-        //TileController bottomWall,
-        //TileController leftSideWall,
-        //TileController rightSideWall)
-        //{
-        //    foreach (Vector2 wallDirection in _wallsWhereDoorsCouldntBe) 
-        //    {
-        //        Vector2 position = new Vector2(7, 6) * wallDirection;
-        //        String positionString = position.X.ToString() + ", " + position.Y.ToString();
-        //        switch (positionString)
-        //        {
-        //            case "0, 6":
-        //                CreateWall(_walls, rightSideWall, _rightSideWallTile, 5, 6, 50, 14);
-        //                break;
-        //            case "0, -6":
-        //                CreateWall(_walls, leftSideWall, _leftSideWallTile, 5, 6, 50, 0);
-        //                break;
-        //            case "7, 0":
-        //                CreateWall(_walls, bottomWall, _bottomWallTile, 6, 7, 50, 10);
-        //                break;
-        //            case "-7, 0":
-        //                CreateWall(_walls, topWall, _topWallTile, 6, 7, 50, 0);
-        //                break;
-        //        }
-        //    }
-        //}
-        private void DoorsWhereDoorsCanBe(DoorController topDoor, 
+
+        private void CreateWallsWhereDoorsArent(TileController topWall, TileController bottomWall, TileController leftSideWall, TileController rightSideWall)
+        {
+            List<Vector2> wallsWhereDoorsArent = new List<Vector2>{ new Vector2(0, -1), new Vector2(0, 1), new Vector2(-1, 0), new Vector2(1, 0) };
+            foreach (var direction in _whereDoorsAre)
+            {
+                wallsWhereDoorsArent.Remove(direction);
+            }
+            foreach (Vector2 wallDirection in wallsWhereDoorsArent)
+            {
+                Vector2 position = new Vector2(7, 6) * wallDirection;
+                String positionString = position.X.ToString() + ", " + position.Y.ToString();
+                switch (positionString)
+                {
+                    case "0, 6":
+                        CreateWall(_walls, rightSideWall, _rightSideWallTile, 5, 6, 50, 14);
+                        break;
+                    case "0, -6":
+                        CreateWall(_walls, leftSideWall, _leftSideWallTile, 5, 6, 50, 0);
+                        break;
+                    case "7, 0":
+                        CreateWall(_walls, bottomWall, _bottomWallTile, 6, 7, 50, 10);
+                        break;
+                    case "-7, 0":
+                        CreateWall(_walls, topWall, _topWallTile, 6, 7, 50, 0);
+                        break;
+                }
+            }
+        }
+        private void CreateDoors(DoorController topDoor, 
             DoorController bottomDoor, 
             DoorController leftSideDoor, 
             DoorController rightSideDoor)
