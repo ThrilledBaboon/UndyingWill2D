@@ -168,13 +168,14 @@ namespace UndyingWill2D.Managers
                 Vector2 position = new Vector2(7, 6) * doorDirection;
                 Debug.WriteLine(position);
                 String positionString = position.X.ToString() + ", " + position.Y.ToString();
+                Debug.WriteLine(positionString);
                 switch (positionString)
                 {
                     case "0, 6":
-                        CreateDoor(_doors, rightSideDoor, _rightSideDoorTile, 6, 6, 50, 14);
+                        CreateDoor(_doors, rightSideDoor, _rightSideDoorTile, 5, 6, 50, 14);
                         break;
                     case "0, -6":
-                        CreateDoor(_doors, leftSideDoor, _leftSideDoorTile, 6, 6, 50, 0);
+                        CreateDoor(_doors, leftSideDoor, _leftSideDoorTile, 5, 6, 50, 0);
                         break;
                     case "7, 0":
                         CreateDoor(_doors, bottomDoor, _bottomDoorTile, 7, 7, 50, 10);
@@ -183,6 +184,7 @@ namespace UndyingWill2D.Managers
                         CreateDoor(_doors, topDoor, _topDoorTile, 7, 7, 50, 0);
                         break;
                 }
+                Debug.WriteLine("");
             }
         }
         private void CreateWall(List<TileController> List, 
@@ -206,7 +208,7 @@ namespace UndyingWill2D.Managers
             }
         }
         private void CreateDoor(List<DoorController> List,
-            DoorController TypeOfWall, Texture2D DoorTile,
+            DoorController TypeOfDoor, Texture2D DoorTile,
             int lowerAxisCoordinate, int upperAxisCoordinate, int scale,
             int currentAxisPosition)
         {
@@ -214,15 +216,17 @@ namespace UndyingWill2D.Managers
             {
                 for (int currentYPosition = lowerAxisCoordinate; currentYPosition < upperAxisCoordinate; currentYPosition++)
                 {
-                    TypeOfWall = new DoorController(DoorTile, scale, new Vector2(currentAxisPosition, currentYPosition), _contentManager);
-                    List.Add(TypeOfWall);
+                    TypeOfDoor = new DoorController(DoorTile, scale, new Vector2(currentAxisPosition, currentYPosition), _contentManager);
+                    Debug.WriteLine(TypeOfDoor.Position);
+                    List.Add(TypeOfDoor);
                 }
                 return;
             }
             for (int currentXPosition = lowerAxisCoordinate; currentXPosition <= upperAxisCoordinate; currentXPosition++)
             {
-                TypeOfWall = new DoorController(DoorTile, scale, new Vector2(currentXPosition, currentAxisPosition), _contentManager);
-                List.Add(TypeOfWall);
+                TypeOfDoor = new DoorController(DoorTile, scale, new Vector2(currentXPosition, currentAxisPosition), _contentManager);
+                Debug.WriteLine(TypeOfDoor.Position);
+                List.Add(TypeOfDoor);
             }
         }
         private void CreateEntities() 
