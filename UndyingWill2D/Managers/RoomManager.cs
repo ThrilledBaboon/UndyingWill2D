@@ -18,14 +18,20 @@ namespace UndyingWill2D.Managers
     {
         List<TileController> _floors = new List<TileController>();
         List<TileController> _walls = new List<TileController>();
+        List<DoorController> _doors = new List<DoorController> { };
         List<EntityController> _entities = new List<EntityController>();
-        List<Vector2> _wallsWhereDoorsCouldntBe = new List<Vector2> { new Vector2(0, -1), new Vector2(0, 1), new Vector2(-1, 0), new Vector2(1, 0) };
-        List<Vector2> _whereDoorsCanBe = new List<Vector2> {};
+        //List<Vector2> _wallsWhereDoorsCouldntBe = new List<Vector2> { new Vector2(0, -1), new Vector2(0, 1), new Vector2(-1, 0), new Vector2(1, 0) };
+        List<Vector2> _whereDoorsCouldBe = new List<Vector2> { new Vector2(0, -1), new Vector2(0, 1), new Vector2(-1, 0), new Vector2(1, 0) };
+        List<Vector2> _whereDoorsAre = new List<Vector2> {};
         Texture2D _floorTile;
         Texture2D _topWallTile;
         Texture2D _rightSideWallTile;
         Texture2D _leftSideWallTile;
         Texture2D _bottomWallTile;
+        Texture2D _topDoorTile;
+        Texture2D _rightSideDoorTile;
+        Texture2D _leftSideDoorTile;
+        Texture2D _bottomDoorTile;
         ContentManager _contentManager;
         Vector2 _screenPosition;
         Random _random = new Random();
@@ -70,6 +76,10 @@ namespace UndyingWill2D.Managers
             _leftSideWallTile = _contentManager.Load<Texture2D>("LeftSideWall");
             _rightSideWallTile = _contentManager.Load<Texture2D>("RightSideWall");
             _bottomWallTile = _contentManager.Load<Texture2D>("BottomWall");
+            _topDoorTile = _contentManager.Load<Texture2D>("TopDoor");
+            _leftSideDoorTile = _contentManager.Load<Texture2D>("LeftSideDoor");
+            _rightSideDoorTile = _contentManager.Load<Texture2D>("RightSideDoor");
+            _bottomDoorTile = _contentManager.Load<Texture2D>("BottomDoor");
             _floors = new List<TileController>();
             CreateFloor();
             CreateWalls();
@@ -77,9 +87,13 @@ namespace UndyingWill2D.Managers
         }
         public void RemoveDoorPossibility(Vector2 direction)
         {
-            _wallsWhereDoorsCouldntBe.Remove(direction);
-            _whereDoorsCanBe.Add(direction);
+            _whereDoorsCouldBe.Remove(direction);
             Debug.WriteLine("Removed " + direction + " from walls where doors cant be");
+        }
+        public void AddDoor(Vector2 direction)
+        {
+            //if()
+            _whereDoorsAre.Add(direction);
         }
         private void CreateFloor()
         {
@@ -101,7 +115,12 @@ namespace UndyingWill2D.Managers
             TileController bottomWall = null;
             TileController leftSideWall = null;
             TileController rightSideWall = null;
-            WallsWhereDoorsCouldntBe(topWall, bottomWall, leftSideWall, rightSideWall);
+            DoorController topDoor = null;
+            DoorController bottomDoor = null;
+            DoorController leftSideDoor = null;
+            DoorController rightSideDoor = null;
+            //WallsWhereDoorsCouldntBe(topWall, bottomWall, leftSideWall, rightSideWall);
+            DoorsWhereDoorsCanBe(topDoor, bottomDoor, leftSideDoor, rightSideDoor);
             CreateWall(_walls, topWall, _topWallTile, 0, 6, 50, 0);
             CreateWall(_walls, topWall, _topWallTile, 8, 14, 50, 0);
             CreateWall(_walls, bottomWall, _bottomWallTile, 0, 6, 50, 10);
@@ -111,28 +130,57 @@ namespace UndyingWill2D.Managers
             CreateWall(_walls, rightSideWall, _rightSideWallTile, 6, 11, 50, 14);
             CreateWall(_walls, rightSideWall, _rightSideWallTile, 0, 5, 50, 14);
         }
-        private void WallsWhereDoorsCouldntBe(TileController topWall,
-        TileController bottomWall,
-        TileController leftSideWall,
-        TileController rightSideWall)
+        //private void WallsWhereDoorsCouldntBe(TileController topWall,
+        //TileController bottomWall,
+        //TileController leftSideWall,
+        //TileController rightSideWall)
+        //{
+        //    foreach (Vector2 wallDirection in _wallsWhereDoorsCouldntBe) 
+        //    {
+        //        Vector2 position = new Vector2(7, 6) * wallDirection;
+        //        String positionString = position.X.ToString() + ", " + position.Y.ToString();
+        //        switch (positionString)
+        //        {
+        //            case "0, 6":
+        //                CreateWall(_walls, rightSideWall, _rightSideWallTile, 5, 6, 50, 14);
+        //                break;
+        //            case "0, -6":
+        //                CreateWall(_walls, leftSideWall, _leftSideWallTile, 5, 6, 50, 0);
+        //                break;
+        //            case "7, 0":
+        //                CreateWall(_walls, bottomWall, _bottomWallTile, 6, 7, 50, 10);
+        //                break;
+        //            case "-7, 0":
+        //                CreateWall(_walls, topWall, _topWallTile, 6, 7, 50, 0);
+        //                break;
+        //        }
+        //    }
+        //}
+        private void DoorsWhereDoorsCanBe(DoorController topDoor, 
+            DoorController bottomDoor, 
+            DoorController leftSideDoor, 
+            DoorController rightSideDoor)
         {
-            foreach (Vector2 wallDirection in _wallsWhereDoorsCouldntBe) 
+            Debug.WriteLine("All Door Directions and their coordinate for Room " + RoomOrigin);
+            foreach (Vector2 doorDirection in _whereDoorsAre)
             {
-                Vector2 position = new Vector2(7, 6) * wallDirection;
+                Debug.WriteLine(doorDirection);
+                Vector2 position = new Vector2(7, 6) * doorDirection;
+                Debug.WriteLine(position);
                 String positionString = position.X.ToString() + ", " + position.Y.ToString();
                 switch (positionString)
                 {
                     case "0, 6":
-                        CreateWall(_walls, rightSideWall, _rightSideWallTile, 5, 6, 50, 14);
+                        CreateDoor(_doors, rightSideDoor, _rightSideDoorTile, 6, 6, 50, 14);
                         break;
                     case "0, -6":
-                        CreateWall(_walls, leftSideWall, _leftSideWallTile, 5, 6, 50, 0);
+                        CreateDoor(_doors, leftSideDoor, _leftSideDoorTile, 6, 6, 50, 0);
                         break;
                     case "7, 0":
-                        CreateWall(_walls, bottomWall, _bottomWallTile, 6, 7, 50, 10);
+                        CreateDoor(_doors, bottomDoor, _bottomDoorTile, 7, 7, 50, 10);
                         break;
                     case "-7, 0":
-                        CreateWall(_walls, topWall, _topWallTile, 6, 7, 50, 0);
+                        CreateDoor(_doors, topDoor, _topDoorTile, 7, 7, 50, 0);
                         break;
                 }
             }
@@ -157,6 +205,26 @@ namespace UndyingWill2D.Managers
                 List.Add(TypeOfWall);
             }
         }
+        private void CreateDoor(List<DoorController> List,
+            DoorController TypeOfWall, Texture2D DoorTile,
+            int lowerAxisCoordinate, int upperAxisCoordinate, int scale,
+            int currentAxisPosition)
+        {
+            if (DoorTile == _leftSideDoorTile || DoorTile == _rightSideDoorTile)
+            {
+                for (int currentYPosition = lowerAxisCoordinate; currentYPosition < upperAxisCoordinate; currentYPosition++)
+                {
+                    TypeOfWall = new DoorController(DoorTile, scale, new Vector2(currentAxisPosition, currentYPosition), _contentManager);
+                    List.Add(TypeOfWall);
+                }
+                return;
+            }
+            for (int currentXPosition = lowerAxisCoordinate; currentXPosition <= upperAxisCoordinate; currentXPosition++)
+            {
+                TypeOfWall = new DoorController(DoorTile, scale, new Vector2(currentXPosition, currentAxisPosition), _contentManager);
+                List.Add(TypeOfWall);
+            }
+        }
         private void CreateEntities() 
         { 
             //to do
@@ -165,7 +233,7 @@ namespace UndyingWill2D.Managers
         {
 
             int[] numberOfPossibleChildren = { 2, 3, 4 };
-            int[] distribution = { 0, 10, 0 };
+            int[] distribution = { 4, 3, 3 };
             List<int> numberOfPossibleChildrenDistribution = new List<int>();
             for (int i = 0; i < distribution.Count(); i++)
             {
@@ -183,12 +251,11 @@ namespace UndyingWill2D.Managers
         private List<Vector2> CreateChildDirectionsDistribution()
         {
             Vector2[] possibleDirections = { new Vector2(0,-1), new Vector2(0,1), new Vector2(-1,0), new Vector2(1,0) };
-            int[] distribution = { 4, 3, 3 };
+            int[] distribution = { 2, 2, 2, 2 };
             List<Vector2> possibleDirectionsOfChildrenDistribution = new List<Vector2>();
             for (int i = 0; i < distribution.Count(); i++)
             {
                 int distributionValue = distribution[i];
-                //possibleDirections will never have all directions possible
                 Vector2 direction = possibleDirections[i];
                 for (int j = 0; j <= distributionValue; j++)
                 {
@@ -199,23 +266,21 @@ namespace UndyingWill2D.Managers
         }
         private List<Vector2> CreateChildDirections() 
         {
-            List<Vector2> childDirections = new List<Vector2>();
             List<Vector2> childDirectionsDistribution = CreateChildDirectionsDistribution();
-            for (int numberOfChildren = 0; numberOfChildren < NumberOfMaxChildren; numberOfChildren++) 
+            for (int numberOfChildren = _whereDoorsAre.Count; numberOfChildren < NumberOfMaxChildren; numberOfChildren++) 
             {
                 int directionIndex = _random.Next(childDirectionsDistribution.Count - 1);
                 Vector2 direction = childDirectionsDistribution[directionIndex];
-                if (!childDirections.Contains(direction)) 
+                if (!_whereDoorsAre.Contains(direction)) 
                 {
-                    childDirections.Add(direction);
+                    _whereDoorsAre.Add(direction);
                 }
                 else
                 {
                     continue;
                 }
-                _wallsWhereDoorsCouldntBe.Remove(direction);
             }
-            return childDirections;
+            return _whereDoorsAre;
         }
         public void AddEntity()
         {
@@ -256,22 +321,25 @@ namespace UndyingWill2D.Managers
         }
         public void Draw(SpriteBatch spriteBatch)
         {
-            for (int floorIndex = 0; floorIndex < _floors.Count(); floorIndex++)
+            foreach(TileController floor in _floors)
             {
-                TileController currentFloor = _floors[floorIndex];
-                currentFloor.Position = RoomGridToWorldCoordinatesMap(currentFloor);
-                currentFloor.Draw(spriteBatch);
+                floor.Position = RoomGridToWorldCoordinatesMap(floor);
+                floor.Draw(spriteBatch);
             }
             //for (int objectIndex = 0; objectIndex < _objectsInRoom.Count(); objectIndex++)
             //{
             //    SpriteController currentObject = _objectsInRoom[objectIndex];
             //    currentObject.Draw(spriteBatch);
             //}
-            for (int wallIndex = 0; wallIndex < _walls.Count(); wallIndex++)
+            foreach (TileController wall in _walls)
             {
-                TileController currentWall = _walls[wallIndex];
-                currentWall.Position = RoomGridToWorldCoordinatesMap(currentWall);
-                currentWall.Draw(spriteBatch);
+                wall.Position = RoomGridToWorldCoordinatesMap(wall);
+                wall.Draw(spriteBatch);
+            }
+            foreach(DoorController door in _doors)
+            {
+                door.Position = RoomGridToWorldCoordinatesMap(door);
+                door.Draw(spriteBatch);
             }
             //for (int currentEntity = 0; currentEntity < _entities.Count(); currentEntity++)
             //{

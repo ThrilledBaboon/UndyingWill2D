@@ -13,9 +13,8 @@ namespace UndyingWill2D.Controllers
     public class DoorController : TileController
     {
         bool _isDoorOpen;
-        private static Texture2D texture;
 
-        public DoorController(Texture2D openTexture, Texture2D closedTexture, int scale, Vector2 position, ContentManager contentManager) :base(texture, scale, position, contentManager)
+        public DoorController(Texture2D texture, int scale, Vector2 position, ContentManager contentManager) :base(texture, scale, position, contentManager)
         {
             _isDoorOpen = false;
         }
