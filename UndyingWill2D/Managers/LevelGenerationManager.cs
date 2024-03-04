@@ -53,21 +53,34 @@ namespace UndyingWill2D.Managers
                 {
                     parentRoom = previousRoom;
                 }
+                Debug.WriteLine("Current parent room origin " + parentRoom.RoomOrigin);
                 List<Vector2> directionsToTryGenerateRoomsIn = parentRoom.ChildDirections;
+                Debug.WriteLine("Below is the list of directions for parent room: " + parentRoom.RoomOrigin);
+                foreach (Vector2 direction in directionsToTryGenerateRoomsIn)
+                {
+                    Debug.WriteLine(direction);
+                }
+                Debug.WriteLine(" ");
                 foreach (Vector2 direction in directionsToTryGenerateRoomsIn) 
                 {
+                    Debug.WriteLine("direction to try make a room in: " + direction);
                     RoomManager childRoom = CreateRoom(parentRoom, direction);
                     try
                     {
                         _dictionaryOfRooms.Add(childRoom.RoomOrigin, childRoom);
+                        Debug.WriteLine("A room was created in this direction");
+                        Debug.WriteLine("created child room origin: " + childRoom.RoomOrigin); 
                     }
                     catch (ArgumentException)
                     {
+                        Debug.WriteLine("A room was already in this direction, so we remove the door opportunity in the parent room");
+                        parentRoom.RemoveDoorPossibility(direction);
                         continue;
                     }
-                    childRoom.RemoveDoorPossibility(direction);
                     queueOfGeneratedRooms.Enqueue(childRoom);
+                    Debug.WriteLine(" ");
                 }
+                Debug.WriteLine(" ");
             }
             return _dictionaryOfRooms; 
         }
