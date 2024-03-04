@@ -42,6 +42,8 @@ namespace UndyingWill2D.Managers
             {
                 RoomManager actualRoom = room.Value;
                 actualRoom.Initialise();
+                Debug.WriteLine(actualRoom.RoomOrigin + " " );
+
             }
             _playerAnimation = _contentManager.Load<Texture2D>("PlayerAnimation");
             _player = new PlayerController(_playerAnimation, 90, new Vector2(_screenWidth / 2, _screenHeight / 2), _contentManager);

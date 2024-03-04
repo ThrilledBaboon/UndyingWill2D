@@ -20,6 +20,7 @@ namespace UndyingWill2D.Managers
         List<TileController> _walls = new List<TileController>();
         List<EntityController> _entities = new List<EntityController>();
         List<Vector2> _wallsWhereDoorsCouldntBe = new List<Vector2> { new Vector2(0, -1), new Vector2(0, 1), new Vector2(-1, 0), new Vector2(1, 0) };
+        List<Vector2> _whereDoorsCanBe = new List<Vector2> {};
         Texture2D _floorTile;
         Texture2D _topWallTile;
         Texture2D _rightSideWallTile;
@@ -50,7 +51,8 @@ namespace UndyingWill2D.Managers
                 if (_numberOfMaxChildren == null) 
                 {
                     int numberOfChildren = CreateNumberOfMaxChildren();
-                    return numberOfChildren;
+                    _numberOfMaxChildren = numberOfChildren;
+                    return _numberOfMaxChildren;
                 }
                 return _numberOfMaxChildren;
             } 
@@ -69,7 +71,6 @@ namespace UndyingWill2D.Managers
             _rightSideWallTile = _contentManager.Load<Texture2D>("RightSideWall");
             _bottomWallTile = _contentManager.Load<Texture2D>("BottomWall");
             _floors = new List<TileController>();
-            CreateChildDirections();
             CreateFloor();
             CreateWalls();
             CreateEntities();
@@ -77,6 +78,8 @@ namespace UndyingWill2D.Managers
         public void RemoveDoorPossibility(Vector2 direction)
         {
             _wallsWhereDoorsCouldntBe.Remove(direction);
+            _whereDoorsCanBe.Add(direction);
+            Debug.WriteLine("Removed " + direction + " from walls where doors cant be");
         }
         private void CreateFloor()
         {
@@ -162,13 +165,15 @@ namespace UndyingWill2D.Managers
         {
 
             int[] numberOfPossibleChildren = { 2, 3, 4 };
-            int[] distribution = { 4, 3, 3 };
+            int[] distribution = { 0, 10, 0 };
             List<int> numberOfPossibleChildrenDistribution = new List<int>();
-            foreach(int DistributionIndex in distribution)
+            for (int i = 0; i < distribution.Count(); i++)
             {
-                foreach(int possibleChild in numberOfPossibleChildren)
+                int distributionValue = distribution[i];
+                int possibleChildren = numberOfPossibleChildren[i];
+                for (int j = 0; j <= distributionValue; j++)
                 {
-                    numberOfPossibleChildrenDistribution.Add(possibleChild);
+                    numberOfPossibleChildrenDistribution.Add(possibleChildren);
                 }
             }
             int numberOfMaxChildrenIndex = _random.Next(numberOfPossibleChildrenDistribution.Count - 1);
@@ -180,9 +185,12 @@ namespace UndyingWill2D.Managers
             Vector2[] possibleDirections = { new Vector2(0,-1), new Vector2(0,1), new Vector2(-1,0), new Vector2(1,0) };
             int[] distribution = { 4, 3, 3 };
             List<Vector2> possibleDirectionsOfChildrenDistribution = new List<Vector2>();
-            foreach(int DistributionIndex in  distribution)
+            for (int i = 0; i < distribution.Count(); i++)
             {
-                foreach (Vector2 direction in possibleDirections)
+                int distributionValue = distribution[i];
+                //possibleDirections will never have all directions possible
+                Vector2 direction = possibleDirections[i];
+                for (int j = 0; j <= distributionValue; j++)
                 {
                     possibleDirectionsOfChildrenDistribution.Add(direction);
                 }
@@ -197,7 +205,14 @@ namespace UndyingWill2D.Managers
             {
                 int directionIndex = _random.Next(childDirectionsDistribution.Count - 1);
                 Vector2 direction = childDirectionsDistribution[directionIndex];
-                childDirections.Add(direction);
+                if (!childDirections.Contains(direction)) 
+                {
+                    childDirections.Add(direction);
+                }
+                else
+                {
+                    continue;
+                }
                 _wallsWhereDoorsCouldntBe.Remove(direction);
             }
             return childDirections;
