@@ -19,18 +19,23 @@ namespace UndyingWill2D.Controllers
 
         //Fields
         float _dashSpeed = 100f;
-
         //counters
         float _timeSinceLastDash = 0f;
         float _timeSinceLastSwitchHotBar = 0f;
         float _timeSinceLastAttack = 0f;
-
         //cooldowns
         float _dashColldown = 150f;
         float _switchHotBarColldown = 15f;
         float _attackColldown = 45f;
         //Property
         public int Stamina { get; set; }
+        public Rectangle collisionRectangle
+        {
+            get
+            {
+                return new Microsoft.Xna.Framework.Rectangle((int)Position.X, (int)Position.Y, Scale, Scale);
+            }
+        }
         public PlayerController(Texture2D texture, int scale, Vector2 positions, ContentManager contentManager) : base(texture, scale, positions, contentManager)
         {
             _moveSpeed = 2.5f;

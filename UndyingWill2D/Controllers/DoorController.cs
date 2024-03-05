@@ -12,10 +12,20 @@ namespace UndyingWill2D.Controllers
 {
     public class DoorController : TileController
     {
+        Vector2 _doorDirection;
         bool _isDoorOpen;
-
-        public DoorController(Texture2D texture, int scale, Vector2 position, ContentManager contentManager) :base(texture, scale, position, contentManager)
+        public Vector2 DoorDirection { get { return _doorDirection; } }
+        public bool IsDoorOpen { get { return _isDoorOpen; } }
+        public Rectangle collisionRectangle
         {
+            get
+            {
+                return new Microsoft.Xna.Framework.Rectangle((int)Position.X, (int)Position.Y, Scale, Scale);
+            }
+        }
+        public DoorController(Vector2 doorDirection, Texture2D texture, int scale, Vector2 position, ContentManager contentManager) :base(texture, scale, position, contentManager)
+        {
+            this._doorDirection = doorDirection;
             _isDoorOpen = false;
         }
         public void CloseDoor()

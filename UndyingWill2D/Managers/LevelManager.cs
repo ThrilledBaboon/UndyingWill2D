@@ -57,6 +57,14 @@ namespace UndyingWill2D.Managers
         {
             _currentRoomOrigin = new Vector2(0, 0);
             _currentRoom = _rooms[_currentRoomOrigin];
+            List<object> doorCollisionData = _currentRoom.CheckDoorCollision();
+            if(doorCollisionData.Count > 0 ) 
+            {
+                _currentRoom.RemovePlayer();
+                Vector2 enteredRoomDirection = (Vector2)doorCollisionData[1];
+                RoomManager enteredRoom = _rooms[_currentRoom.RoomOrigin + enteredRoomDirection];
+                enteredRoom.AddPlayer((PlayerController)doorCollisionData[0], enteredRoomDirection);
+            }
             _currentRoom.Update();
             _player.Update();
         }
