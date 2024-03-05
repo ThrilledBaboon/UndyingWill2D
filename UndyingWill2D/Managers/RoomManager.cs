@@ -292,7 +292,26 @@ namespace UndyingWill2D.Managers
         public void AddPlayer(PlayerController player, Vector2 enteredRoomDirection)
         {
             _player = player;
-            _player.Position = //figure this out its 00:52
+            Vector2 inverseOfEnteredDirection = enteredRoomDirection * new Vector2(-1, -1);
+            Vector2 something = inverseOfEnteredDirection * new Vector2(7, 6);
+            String positionString = something.X.ToString() + ", " + something.Y.ToString();
+            Debug.WriteLine(positionString);
+            switch (positionString)
+            {
+                case "0, 6":
+                    _player.Position = new Vector2(14, 6); 
+                    break;
+                case "0, -6":
+                    _player.Position = new Vector2(0, -6);
+                    break;
+                case "7, 0":
+                    _player.Position = new Vector2(14, 6);
+                    break;
+                case "-7, 0":
+                    _player.Position = new Vector2(14, 6);
+                    break;
+            }
+            _player.Position = inverseOfEnteredDirection * new Vector2(7, 6);//figure this out its 00:52
         }
         public void RemovePlayer()
         {
