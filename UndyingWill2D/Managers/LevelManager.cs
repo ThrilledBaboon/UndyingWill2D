@@ -42,11 +42,13 @@ namespace UndyingWill2D.Managers
             {
                 RoomManager actualRoom = room.Value;
                 actualRoom.Initialise();
-                Debug.WriteLine(actualRoom.RoomOrigin + " " );
 
             }
             _playerAnimation = _contentManager.Load<Texture2D>("PlayerAnimation");
             _player = new PlayerController(_playerAnimation, 90, new Vector2(_screenWidth / 2, _screenHeight / 2), _contentManager);
+            _currentRoomOrigin = new Vector2(0, 0);
+            _currentRoom = _rooms[_currentRoomOrigin];
+            _currentRoom.AddPlayer(_player, _currentRoomOrigin);
         }
         private void LevelGeneration()
         {
@@ -55,10 +57,8 @@ namespace UndyingWill2D.Managers
         }
         public void Update()
         {
-            _currentRoomOrigin = new Vector2(0, 0);
-            _currentRoom = _rooms[_currentRoomOrigin];
             List<object> doorCollisionData = _currentRoom.CheckDoorCollision();
-            if(doorCollisionData.Count > 0 ) 
+            if(doorCollisionData != null ) 
             {
                 _currentRoom.RemovePlayer();
                 Vector2 enteredRoomDirection = (Vector2)doorCollisionData[1];
@@ -66,21 +66,18 @@ namespace UndyingWill2D.Managers
                 enteredRoom.AddPlayer((PlayerController)doorCollisionData[0], enteredRoomDirection);
             }
             _currentRoom.Update();
-            _player.Update();
         }
         public void LoadContent()
         {
             foreach (var room in _rooms)
             {
                 RoomManager actualRoom = room.Value;
-                actualRoom.Initialise();
+                actualRoom.LoadContent();
             }
-            _player.LoadContent();
         }
         public void Draw(SpriteBatch spriteBatch)
         {
             _currentRoom.Draw(spriteBatch);
-            _player.Draw(spriteBatch);
         }
     }
 }

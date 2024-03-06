@@ -89,7 +89,6 @@ namespace UndyingWill2D.Managers
         public void RemoveDoorPossibility(Vector2 direction)
         {
             _whereDoorsCouldBe.Remove(direction);
-            Debug.WriteLine("Removed " + direction + " from walls where doors cant be");
         }
         public void AddDoor(Vector2 direction)
         {
@@ -164,14 +163,10 @@ namespace UndyingWill2D.Managers
             DoorController leftSideDoor, 
             DoorController rightSideDoor)
         {
-            Debug.WriteLine("All Door Directions and their coordinate for Room " + RoomOrigin);
             foreach (Vector2 doorDirection in _whereDoorsAre)
             {
-                Debug.WriteLine(doorDirection);
                 Vector2 position = new Vector2(7, 6) * doorDirection;
-                Debug.WriteLine(position);
                 String positionString = position.X.ToString() + ", " + position.Y.ToString();
-                Debug.WriteLine(positionString);
                 switch (positionString)
                 {
                     case "0, 6":
@@ -187,7 +182,6 @@ namespace UndyingWill2D.Managers
                         CreateDoor(doorDirection, _doors, topDoor, _topDoorTile, 7, 7, 50, 0);
                         break;
                 }
-                Debug.WriteLine("");
             }
         }
         private void CreateWall(List<TileController> List, 
@@ -220,7 +214,6 @@ namespace UndyingWill2D.Managers
                 for (int currentYPosition = lowerAxisCoordinate; currentYPosition < upperAxisCoordinate; currentYPosition++)
                 {
                     TypeOfDoor = new DoorController(DoorDirection, DoorTile, scale, new Vector2(currentAxisPosition, currentYPosition), _contentManager);
-                    Debug.WriteLine(TypeOfDoor.Position);
                     List.Add(TypeOfDoor);
                 }
                 return;
@@ -228,7 +221,6 @@ namespace UndyingWill2D.Managers
             for (int currentXPosition = lowerAxisCoordinate; currentXPosition <= upperAxisCoordinate; currentXPosition++)
             {
                 TypeOfDoor = new DoorController(DoorDirection, DoorTile, scale, new Vector2(currentXPosition, currentAxisPosition), _contentManager);
-                Debug.WriteLine(TypeOfDoor.Position);
                 List.Add(TypeOfDoor);
             }
         }
@@ -295,7 +287,6 @@ namespace UndyingWill2D.Managers
             Vector2 inverseOfEnteredDirection = enteredRoomDirection * new Vector2(-1, -1);
             Vector2 something = inverseOfEnteredDirection * new Vector2(7, 6);
             String positionString = something.X.ToString() + ", " + something.Y.ToString();
-            Debug.WriteLine(positionString);
             switch (positionString)
             {
                 case "0, 6":
@@ -311,7 +302,8 @@ namespace UndyingWill2D.Managers
                     _player.Position = new Vector2(14, 6);
                     break;
             }
-            _player.Position = inverseOfEnteredDirection * new Vector2(7, 6);//figure this out its 00:52
+            _player.Position = inverseOfEnteredDirection * new Vector2(7, 6);
+            Debug.WriteLine(_player.Position);
         }
         public void RemovePlayer()
         {
@@ -322,19 +314,19 @@ namespace UndyingWill2D.Managers
             Vector2 spritePosition = Sprite.Position;
             if (spritePosition.X <= 7)
             {
-                spritePosition.X = _screenPosition.X + Sprite.Scale * -(7 - spritePosition.X);
+                spritePosition.X = _screenPosition.X + 50 * -(7 - spritePosition.X);
             }
             else if (spritePosition.X <= 15)
             {
-                spritePosition.X = _screenPosition.X + Sprite.Scale * (spritePosition.X - 7);
+                spritePosition.X = _screenPosition.X + 50 * (spritePosition.X - 7);
             }
             if (spritePosition.Y <= 5)
             {
-                spritePosition.Y = _screenPosition.Y + Sprite.Scale * -(5 - spritePosition.Y);
+                spritePosition.Y = _screenPosition.Y + 50 * -(5 - spritePosition.Y);
             }
             else if (spritePosition.Y <= 11)
             {
-                spritePosition.Y = _screenPosition.Y + Sprite.Scale * (spritePosition.Y - 5);
+                spritePosition.Y = _screenPosition.Y + 50 * (spritePosition.Y - 5);
             }
             return spritePosition;
         }
@@ -343,6 +335,10 @@ namespace UndyingWill2D.Managers
             foreach(EntityController entity in _entities)
             {
                 entity.Update();
+            }
+            if (_player != null)
+            {
+                _player.Update();
             }
         }
         public List<object> CheckDoorCollision()
@@ -366,6 +362,10 @@ namespace UndyingWill2D.Managers
             {
                 entity.LoadContent();
             }
+            if (_player != null)
+            {
+                _player.LoadContent();
+            }
         }
         public void Draw(SpriteBatch spriteBatch)
         {
@@ -388,6 +388,11 @@ namespace UndyingWill2D.Managers
             {
                 entity.Position = RoomGridToWorldCoordinatesMap(entity);
                 entity.Draw(spriteBatch);
+            }
+            if ( _player != null) 
+            {
+                _player.Position = RoomGridToWorldCoordinatesMap(_player);
+                _player.Draw(spriteBatch);
             }
         }
     }
