@@ -60,17 +60,18 @@ namespace UndyingWill2D.Managers
                 List<Vector2> directionsToTryGenerateRoomsIn = parentRoom.ChildDirections;
                 foreach (Vector2 directionToGenerateRoom in directionsToTryGenerateRoomsIn) 
                 {
-                    List<Vector2> roomDirections = new List<Vector2> { new Vector2(0, -1), new Vector2(0, 1), new Vector2(-1, 0), new Vector2(1, 0) };
+                    List<Vector2> roomDirections = new List<Vector2> { new Vector2(-0, -1), new Vector2(-0, 1), new Vector2(-1, -0), new Vector2(1, -0) };
                     RoomManager childRoom = CreateRoom(parentRoom, directionToGenerateRoom);
-                    try
+                    if(dictionaryOfRooms.ContainsKey(childRoom.RoomOrigin))
                     {
-                        dictionaryOfRooms.Add(childRoom.RoomOrigin, childRoom);
-                    }
-                    catch (ArgumentException)
-                    {
-                        parentRoom.RemoveDoorPossibility(directionToGenerateRoom);
+                        parentRoom.AddDoor(directionToGenerateRoom);
+                        RoomManager OtherRoom = dictionaryOfRooms[childRoom.RoomOrigin];
+                        Vector2 otherDoorToParentConnection = directionToGenerateRoom * new Vector2(-1, -1);
+                        OtherRoom.AddDoor(otherDoorToParentConnection);
                         continue;
                     }
+                    dictionaryOfRooms.Add(childRoom.RoomOrigin, childRoom);
+                    parentRoom.AddDoor(directionToGenerateRoom);
                     Vector2 childDoorToParentConnection = directionToGenerateRoom * new Vector2(-1, -1);
                     childRoom.AddDoor(childDoorToParentConnection);
                     roomDirections.Remove(childDoorToParentConnection);
@@ -81,8 +82,8 @@ namespace UndyingWill2D.Managers
                         {
                             childRoom.AddDoor(direction);
                             RoomManager collidedRoom = dictionaryOfRooms[checkForCollision];
-                            Vector2 directionOfCollidedRoomToChildRoom = directionToGenerateRoom * new Vector2(-1, -1);
-                            collidedRoom.AddDoor(directionOfCollidedRoomToChildRoom);
+                            Vector2 directionFromCollidedRoomToChildRoom = direction * new Vector2(-1, -1);
+                            collidedRoom.AddDoor(directionFromCollidedRoomToChildRoom);
                         }
                     }
                     queueOfGeneratedRooms.Enqueue(childRoom);

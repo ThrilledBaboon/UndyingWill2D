@@ -158,13 +158,8 @@ namespace UndyingWill2D.Managers
             }
         }
         //Other Methods
-        public void RemoveDoorPossibility(Vector2 direction)
-        {
-            _whereDoorsCouldBe.Remove(direction);
-        }
         public void AddDoor(Vector2 direction)
         {
-            //if()
             _whereDoorsAre.Add(direction);
         }
         //Creating Collections Methods
@@ -216,16 +211,16 @@ namespace UndyingWill2D.Managers
                 String positionString = position.X.ToString() + ", " + position.Y.ToString();
                 switch (positionString)
                 {
-                    case "0, 6":
+                    case "7, 0":
                         CreateWall(_walls, rightSideWall, _rightSideWallTile, _roomHeight / 2, _roomLength / 2 - 1, 50, _roomLength);
                         break;
-                    case "0, -6":
+                    case "-7, 0":
                         CreateWall(_walls, leftSideWall, _leftSideWallTile, _roomHeight / 2, _roomLength / 2 - 1, 50, 0);
                         break;
-                    case "7, 0":
+                    case "0, 6":
                         CreateWall(_walls, bottomWall, _bottomWallTile, _roomLength / 2 - 1, _roomLength / 2, 50, _roomHeight);
                         break;
-                    case "-7, 0":
+                    case "0, -6":
                         CreateWall(_walls, topWall, _topWallTile, _roomLength / 2 - 1, _roomLength / 2, 50, 0);
                         break;
                 }
@@ -263,27 +258,37 @@ namespace UndyingWill2D.Managers
         {
             foreach (Vector2 doorDirection in _whereDoorsAre)
             {
-                Vector2 position = new Vector2(7, 6) * doorDirection;
-                String positionString = position.X.ToString() + ", " + position.Y.ToString();
-                switch (positionString)
+                int doorX;
+                int doorY;
+                Vector2 direction = doorDirection + new Vector2(0, 0);
+                String directionString = direction.X.ToString() + ", " + direction.Y.ToString();
+                switch (directionString)
                 {
-                    case "0, 6":
-                        CreateDoor(doorDirection, _doors, rightSideDoor, _rightSideDoorTile, _roomHeight/2, _roomLength / 2 - 1, 50, _roomLength);
+                    case "1, 0":
+                        doorX = _roomLength;
+                        doorY = _roomHeight / 2;
+                        CreateDoor(doorDirection, _doors, rightSideDoor, _rightSideDoorTile, doorY, doorX, 50);
                         break;
-                    case "0, -6":
-                        CreateDoor(doorDirection, _doors, leftSideDoor, _leftSideDoorTile, _roomHeight / 2, _roomLength / 2 - 1, 50, 0);
+                    case "-1, 0":
+                        doorX = 0;
+                        doorY = _roomHeight / 2;
+                        CreateDoor(doorDirection, _doors, leftSideDoor, _leftSideDoorTile, doorY, doorX, 50);
                         break;
-                    case "7, 0":
-                        CreateDoor(doorDirection, _doors, bottomDoor, _bottomDoorTile, _roomLength / 2, _roomLength / 2, 50, _roomHeight);
+                    case "0, 1":
+                        doorX = _roomLength / 2;
+                        doorY = _roomHeight;
+                        CreateDoor(doorDirection, _doors, bottomDoor, _bottomDoorTile, doorX, doorY, 50);
                         break;
-                    case "-7, 0":
-                        CreateDoor(doorDirection, _doors, topDoor, _topDoorTile, _roomLength / 2, _roomLength / 2, 50, 0);
+                    case "0, -1":
+                        doorX = _roomLength / 2;
+                        doorY = 0;
+                        CreateDoor(doorDirection, _doors, topDoor, _topDoorTile, doorX, doorY, 50);
                         break;
                 }
             }
         }
-        private void CreateWall(List<TileController> List, 
-            TileController TypeOfWall, Texture2D WallTile, 
+        private void CreateWall(List<TileController> List,
+            TileController TypeOfWall, Texture2D WallTile,
             int lowerAxisCoordinate, int upperAxisCoordinate, int scale,
             int currentAxisPosition)
         {
@@ -304,23 +309,16 @@ namespace UndyingWill2D.Managers
         }
         private void CreateDoor(Vector2 DoorDirection, List<DoorController> List,
             DoorController TypeOfDoor, Texture2D DoorTile,
-            int lowerAxisCoordinate, int upperAxisCoordinate, int scale,
-            int currentAxisPosition)
+            int AxisLocation, int otherAxisPosition, int scale)
         {
             if (DoorTile == _leftSideDoorTile || DoorTile == _rightSideDoorTile)
             {
-                for (int currentYPosition = lowerAxisCoordinate; currentYPosition < upperAxisCoordinate; currentYPosition++)
-                {
-                    TypeOfDoor = new DoorController(DoorDirection, DoorTile, scale, new Vector2(currentAxisPosition, currentYPosition), _contentManager);
-                    List.Add(TypeOfDoor);
-                }
+                TypeOfDoor = new DoorController(DoorDirection, DoorTile, scale, new Vector2(otherAxisPosition, AxisLocation), _contentManager);
+                List.Add(TypeOfDoor);
                 return;
             }
-            for (int currentXPosition = lowerAxisCoordinate; currentXPosition <= upperAxisCoordinate; currentXPosition++)
-            {
-                TypeOfDoor = new DoorController(DoorDirection, DoorTile, scale, new Vector2(currentXPosition, currentAxisPosition), _contentManager);
-                List.Add(TypeOfDoor);
-            }
+            TypeOfDoor = new DoorController(DoorDirection, DoorTile, scale, new Vector2(AxisLocation, otherAxisPosition), _contentManager);
+            List.Add(TypeOfDoor);
         }
         //Methods Used For Properties
         private int CreateNumberOfMaxChildren()
@@ -360,20 +358,20 @@ namespace UndyingWill2D.Managers
         private List<Vector2> CreateChildDirections() 
         {
             List<Vector2> childDirectionsDistribution = CreateChildDirectionsDistribution();
-            for (int numberOfChildren = _whereDoorsAre.Count; numberOfChildren < NumberOfMaxChildren; numberOfChildren++) 
+            for (int numberOfChildren = _childDirections.Count; numberOfChildren < NumberOfMaxChildren; numberOfChildren++) 
             {
                 int directionIndex = _random.Next(childDirectionsDistribution.Count - 1);
                 Vector2 direction = childDirectionsDistribution[directionIndex];
-                if (!_whereDoorsAre.Contains(direction)) 
+                if (!_childDirections.Contains(direction)) 
                 {
-                    _whereDoorsAre.Add(direction);
+                    _childDirections.Add(direction);
                 }
                 else
                 {
                     continue;
                 }
             }
-            return _whereDoorsAre;
+            return _childDirections;
         }
         //Player Related Methods
         public void AddPlayer(PlayerController player, Vector2 enteredRoomDirection)
