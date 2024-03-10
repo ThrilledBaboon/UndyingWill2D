@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading.Tasks.Sources;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -16,13 +17,19 @@ namespace UndyingWill2D.Managers
 {
     public class RoomManager
     {
+        //Room Information Fields
+        int _roomLength = 14;
+        int _roomHeight = 10;
+        //Collection Fields
         List<TileController> _floors = new List<TileController>();
         List<TileController> _walls = new List<TileController>();
         List<DoorController> _doors = new List<DoorController> { };
         List<EntityController> _entities = new List<EntityController>();
+        List<Vector2> _childDirections = new List<Vector2>();
         //List<Vector2> _wallsWhereDoorsCouldntBe = new List<Vector2> { new Vector2(0, -1), new Vector2(0, 1), new Vector2(-1, 0), new Vector2(1, 0) };
         List<Vector2> _whereDoorsCouldBe = new List<Vector2> { new Vector2(0, -1), new Vector2(0, 1), new Vector2(-1, 0), new Vector2(1, 0) };
         List<Vector2> _whereDoorsAre = new List<Vector2> {};
+        //Texture Fields
         Texture2D _floorTile;
         Texture2D _topWallTile;
         Texture2D _rightSideWallTile;
@@ -32,11 +39,14 @@ namespace UndyingWill2D.Managers
         Texture2D _rightSideDoorTile;
         Texture2D _leftSideDoorTile;
         Texture2D _bottomDoorTile;
+        //Other Fields
         ContentManager _contentManager;
         Vector2 _screenPosition;
         Random _random = new Random();
+        int? _numberOfMaxChildren;
+        PlayerController _player;
+        //Properties
         public Vector2 RoomOrigin {  get; set; }
-        List<Vector2> _childDirections = new List<Vector2>();
         public List<Vector2> ChildDirections
         {
             get
@@ -49,8 +59,6 @@ namespace UndyingWill2D.Managers
                 return _childDirections;
             }
         }
-        int? _numberOfMaxChildren;
-        private PlayerController _player;
         public int? NumberOfMaxChildren
         {
             get
@@ -64,12 +72,14 @@ namespace UndyingWill2D.Managers
                 return _numberOfMaxChildren;
             } 
         }
+        //Constructor
         public RoomManager(ContentManager contentManager, Vector2 origin, Vector2 screenPosition) 
         { 
             this._contentManager = contentManager;
             this.RoomOrigin = origin;
             this._screenPosition = screenPosition;
         }
+        //Core Methods
         public void Initialise() 
         {
             _floorTile = _contentManager.Load<Texture2D>("FloorTile");
@@ -86,6 +96,69 @@ namespace UndyingWill2D.Managers
             CreateWalls();
             CreateEntities();
         }
+        public void LoadContent()
+        {
+            foreach (EntityController entity in _entities)
+            {
+                entity.LoadContent();
+            }
+            if (_player != null)
+            {
+                _player.LoadContent();
+            }
+        }
+        public void Update()
+        {
+            foreach (EntityController entity in _entities)
+            {
+                entity.Update(_roomHeight, _roomLength);
+            }
+            if (_player != null)
+            {
+                _player.Update(_roomHeight, _roomLength);
+                KeyboardState keyboardState = Keyboard.GetState();
+                if (keyboardState.IsKeyDown(Keys.K))
+                {
+                    foreach (DoorController door in _doors) 
+                    { door.CloseDoor(); }
+                }
+                //if (keyboardState.IsKeyDown(Keys.J))
+                if (true)
+                {
+                    foreach (DoorController door in _doors)
+                    { door.OpenDoor(); }
+                }
+            }
+        }
+        public void Draw(SpriteBatch spriteBatch)
+        {
+            foreach (TileController floor in _floors)
+            {
+                floor.ActualPosition = RoomGridToWorldCoordinatesMap(floor);
+                floor.Draw(spriteBatch);
+            }
+            foreach (TileController wall in _walls)
+            {
+                wall.ActualPosition = RoomGridToWorldCoordinatesMap(wall);
+                wall.Draw(spriteBatch);
+            }
+            foreach (DoorController door in _doors)
+            {
+                door.ActualPosition = RoomGridToWorldCoordinatesMap(door);
+                door.Draw(spriteBatch);
+            }
+            foreach (EntityController entity in _entities)
+            {
+                entity.ActualPosition = RoomGridToWorldCoordinatesMap(entity);
+                entity.Draw(spriteBatch);
+            }
+            if (_player != null)
+            {
+                _player.ActualPosition = RoomGridToWorldCoordinatesMap(_player);
+                _player.Draw(spriteBatch);
+            }
+        }
+        //Other Methods
         public void RemoveDoorPossibility(Vector2 direction)
         {
             _whereDoorsCouldBe.Remove(direction);
@@ -95,11 +168,12 @@ namespace UndyingWill2D.Managers
             //if()
             _whereDoorsAre.Add(direction);
         }
+        //Creating Collections Methods
         private void CreateFloor()
         {
-            for (int i = 0; i < 11; i++)
+            for (int i = 0; i <= _roomHeight; i++)
             {
-                for (int j = 0; j < 15; j++)
+                for (int j = 0; j <= _roomLength; j++)
                 {
                     int scale = 50;
                     float roomXPosition = j;
@@ -121,14 +195,14 @@ namespace UndyingWill2D.Managers
             DoorController rightSideDoor = null;
             CreateDoors(topDoor, bottomDoor, leftSideDoor, rightSideDoor);
             CreateWallsWhereDoorsArent(topWall, bottomWall, leftSideWall, rightSideWall);
-            CreateWall(_walls, topWall, _topWallTile, 0, 6, 50, 0);
-            CreateWall(_walls, topWall, _topWallTile, 8, 14, 50, 0);
-            CreateWall(_walls, bottomWall, _bottomWallTile, 0, 6, 50, 10);
-            CreateWall(_walls, bottomWall, _bottomWallTile, 8, 14, 50, 10);
-            CreateWall(_walls, leftSideWall, _leftSideWallTile, 6, 11, 50, 0);
-            CreateWall(_walls, leftSideWall, _leftSideWallTile, 0, 5, 50, 0);
-            CreateWall(_walls, rightSideWall, _rightSideWallTile, 6, 11, 50, 14);
-            CreateWall(_walls, rightSideWall, _rightSideWallTile, 0, 5, 50, 14);
+            CreateWall(_walls, topWall, _topWallTile, 0, _roomLength / 2 - 1, 50, 0);
+            CreateWall(_walls, topWall, _topWallTile, _roomLength / 2 + 1, _roomLength, 50, 0);
+            CreateWall(_walls, bottomWall, _bottomWallTile, 0, _roomLength / 2 - 1, 50, _roomHeight);
+            CreateWall(_walls, bottomWall, _bottomWallTile, _roomLength / 2 + 1, _roomLength, 50, _roomHeight);
+            CreateWall(_walls, leftSideWall, _leftSideWallTile, _roomLength / 2 - 1, _roomHeight + 1, 50, 0);
+            CreateWall(_walls, leftSideWall, _leftSideWallTile, 0, _roomHeight/2, 50, 0);
+            CreateWall(_walls, rightSideWall, _rightSideWallTile, _roomLength / 2 - 1, _roomHeight + 1, 50, _roomLength);
+            CreateWall(_walls, rightSideWall, _rightSideWallTile, 0, _roomHeight/2, 50, _roomLength);
         }
         private void CreateWallsWhereDoorsArent(TileController topWall, TileController bottomWall, TileController leftSideWall, TileController rightSideWall)
         {
@@ -144,20 +218,43 @@ namespace UndyingWill2D.Managers
                 switch (positionString)
                 {
                     case "0, 6":
-                        CreateWall(_walls, rightSideWall, _rightSideWallTile, 5, 6, 50, 14);
+                        CreateWall(_walls, rightSideWall, _rightSideWallTile, _roomHeight / 2, _roomLength / 2 - 1, 50, _roomLength);
                         break;
                     case "0, -6":
-                        CreateWall(_walls, leftSideWall, _leftSideWallTile, 5, 6, 50, 0);
+                        CreateWall(_walls, leftSideWall, _leftSideWallTile, _roomHeight / 2, _roomLength / 2 - 1, 50, 0);
                         break;
                     case "7, 0":
-                        CreateWall(_walls, bottomWall, _bottomWallTile, 6, 7, 50, 10);
+                        CreateWall(_walls, bottomWall, _bottomWallTile, _roomLength / 2 - 1, _roomLength / 2, 50, _roomHeight);
                         break;
                     case "-7, 0":
-                        CreateWall(_walls, topWall, _topWallTile, 6, 7, 50, 0);
+                        CreateWall(_walls, topWall, _topWallTile, _roomLength / 2 - 1, _roomLength / 2, 50, 0);
                         break;
                 }
             }
         }
+        private void CreateEntities() 
+        { 
+            //to do
+        }
+        public List<object> CheckDoorCollision()
+        {
+            foreach (DoorController door in _doors)
+            {
+                Vector2 doorPosition = door.RoomPosition;
+                Vector2 playerPosition = _player.RoomPosition;
+                if (doorPosition.X == playerPosition.X &&
+                    doorPosition.Y == playerPosition.Y &&
+                    door.IsDoorOpen == true)
+                {
+                    List<object> list = new();
+                    list.Add(_player);
+                    list.Add(door.DoorDirection);
+                    return list;
+                }
+            }
+            return null;
+        }
+        //Creating Individual Tile Methods
         private void CreateDoors(DoorController topDoor, 
             DoorController bottomDoor, 
             DoorController leftSideDoor, 
@@ -170,16 +267,16 @@ namespace UndyingWill2D.Managers
                 switch (positionString)
                 {
                     case "0, 6":
-                        CreateDoor(doorDirection, _doors, rightSideDoor, _rightSideDoorTile, 5, 6, 50, 14);
+                        CreateDoor(doorDirection, _doors, rightSideDoor, _rightSideDoorTile, _roomHeight/2, _roomLength / 2 - 1, 50, _roomLength);
                         break;
                     case "0, -6":
-                        CreateDoor(doorDirection, _doors, leftSideDoor, _leftSideDoorTile, 5, 6, 50, 0);
+                        CreateDoor(doorDirection, _doors, leftSideDoor, _leftSideDoorTile, _roomHeight / 2, _roomLength / 2 - 1, 50, 0);
                         break;
                     case "7, 0":
-                        CreateDoor(doorDirection, _doors, bottomDoor, _bottomDoorTile, 7, 7, 50, 10);
+                        CreateDoor(doorDirection, _doors, bottomDoor, _bottomDoorTile, _roomLength / 2, _roomLength / 2, 50, _roomHeight);
                         break;
                     case "-7, 0":
-                        CreateDoor(doorDirection, _doors, topDoor, _topDoorTile, 7, 7, 50, 0);
+                        CreateDoor(doorDirection, _doors, topDoor, _topDoorTile, _roomLength / 2, _roomLength / 2, 50, 0);
                         break;
                 }
             }
@@ -224,13 +321,9 @@ namespace UndyingWill2D.Managers
                 List.Add(TypeOfDoor);
             }
         }
-        private void CreateEntities() 
-        { 
-            //to do
-        }
+        //Methods Used For Properties
         private int CreateNumberOfMaxChildren()
         {
-
             int[] numberOfPossibleChildren = { 2, 3, 4 };
             int[] distribution = { 4, 3, 3 };
             List<int> numberOfPossibleChildrenDistribution = new List<int>();
@@ -281,37 +374,42 @@ namespace UndyingWill2D.Managers
             }
             return _whereDoorsAre;
         }
+        //Player Related Methods
         public void AddPlayer(PlayerController player, Vector2 enteredRoomDirection)
         {
-            _player = player;
+            Debug.WriteLine("Start of Add Player: " + player.RoomPosition);
             Vector2 inverseOfEnteredDirection = enteredRoomDirection * new Vector2(-1, -1);
             Vector2 something = inverseOfEnteredDirection * new Vector2(7, 6);
             String positionString = something.X.ToString() + ", " + something.Y.ToString();
             switch (positionString)
             {
-                case "0, 6":
-                    _player.Position = new Vector2(14, 6); 
+                case "-0, 6":
+                    player.RoomPosition = new Vector2(_roomLength / 2, 0); 
                     break;
-                case "0, -6":
-                    _player.Position = new Vector2(0, -6);
+                case "-0, -6":
+                    player.RoomPosition = new Vector2(_roomLength / 2, _roomHeight);
                     break;
-                case "7, 0":
-                    _player.Position = new Vector2(14, 6);
+                case "7, -0":
+                    player.RoomPosition = new Vector2(0, _roomHeight / 2);
                     break;
-                case "-7, 0":
-                    _player.Position = new Vector2(14, 6);
+                case "-7, -0":
+                    player.RoomPosition = new Vector2(_roomLength, _roomHeight / 2);
+                    break;
+                case "-0, -0":
+                    player.RoomPosition = new Vector2(_roomLength / 2, _roomHeight / 2);
                     break;
             }
-            _player.Position = inverseOfEnteredDirection * new Vector2(7, 6);
-            Debug.WriteLine(_player.Position);
+            _player = player;
+            Debug.WriteLine("End of Add Player: " + _player.RoomPosition);
         }
         public void RemovePlayer()
         {
             _player = null;
         }
+        //Used Within Draw Methods
         private Vector2 RoomGridToWorldCoordinatesMap(SpriteController Sprite)
         {
-            Vector2 spritePosition = Sprite.Position;
+            Vector2 spritePosition = Sprite.RoomPosition;
             if (spritePosition.X <= 7)
             {
                 spritePosition.X = _screenPosition.X + 50 * -(7 - spritePosition.X);
@@ -329,71 +427,6 @@ namespace UndyingWill2D.Managers
                 spritePosition.Y = _screenPosition.Y + 50 * (spritePosition.Y - 5);
             }
             return spritePosition;
-        }
-        public void Update() 
-        {
-            foreach(EntityController entity in _entities)
-            {
-                entity.Update();
-            }
-            if (_player != null)
-            {
-                _player.Update();
-            }
-        }
-        public List<object> CheckDoorCollision()
-        {
-            foreach (DoorController door in _doors)
-            {
-                Rectangle doorCollider = door.collisionRectangle;
-                if (doorCollider.Intersects(_player.collisionRectangle) && door.IsDoorOpen == true)
-                {
-                    List<object> list = new();
-                    list.Add(_player);
-                    list.Add(door.DoorDirection);
-                    return list;
-                }
-            }
-            return null;
-        }
-        public void LoadContent() 
-        {
-            foreach (EntityController entity in _entities)
-            {
-                entity.LoadContent();
-            }
-            if (_player != null)
-            {
-                _player.LoadContent();
-            }
-        }
-        public void Draw(SpriteBatch spriteBatch)
-        {
-            foreach(TileController floor in _floors)
-            {
-                floor.Position = RoomGridToWorldCoordinatesMap(floor);
-                floor.Draw(spriteBatch);
-            }
-            foreach (TileController wall in _walls)
-            {
-                wall.Position = RoomGridToWorldCoordinatesMap(wall);
-                wall.Draw(spriteBatch);
-            }
-            foreach(DoorController door in _doors)
-            {
-                door.Position = RoomGridToWorldCoordinatesMap(door);
-                door.Draw(spriteBatch);
-            }
-            foreach (EntityController entity in _entities)
-            {
-                entity.Position = RoomGridToWorldCoordinatesMap(entity);
-                entity.Draw(spriteBatch);
-            }
-            if ( _player != null) 
-            {
-                _player.Position = RoomGridToWorldCoordinatesMap(_player);
-                _player.Draw(spriteBatch);
-            }
         }
     }
 }

@@ -13,8 +13,7 @@ namespace UndyingWill2D.Controllers
 {
     public class MobController : EntityController
     {
+        //Contructor
           MobController(Texture2D texture, int scale, Vector2 positions, ContentManager contentManager) : base(texture, scale, positions, contentManager) { }
-
-         
     }
 }

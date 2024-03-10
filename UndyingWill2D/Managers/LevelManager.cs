@@ -15,26 +15,26 @@ namespace UndyingWill2D.Managers
 {
     public class LevelManager
     {
-        private List<EntityController> _controllers;
-        Dictionary<Vector2, RoomManager> _rooms;
-        PlayerController _player;
-        ContentManager _contentManager;
-
+        //Screen Fields
         int _screenWidth;
         int _screenHeight;
-
+        //Player Fields
+        PlayerController _player;
         Texture2D _playerAnimation;
-
+        //Room Fields
         Vector2 _currentRoomOrigin;
         RoomManager _currentRoom;
-
+        Dictionary<Vector2, RoomManager> _rooms;
+        //Other Fields
+        ContentManager _contentManager;
+        //Constructor
         public LevelManager(ContentManager contentManager, int screenWidth, int screenHeight) 
         { 
             this._contentManager = contentManager;
             this._screenWidth = screenWidth; 
             this._screenHeight = screenHeight;
         }
-
+        //Core Methods
         public void Initialise()
         {
             LevelGeneration();
@@ -42,42 +42,42 @@ namespace UndyingWill2D.Managers
             {
                 RoomManager actualRoom = room.Value;
                 actualRoom.Initialise();
-
             }
             _playerAnimation = _contentManager.Load<Texture2D>("PlayerAnimation");
-            _player = new PlayerController(_playerAnimation, 90, new Vector2(_screenWidth / 2, _screenHeight / 2), _contentManager);
+            _player = new PlayerController(_playerAnimation, 90, new Vector2(0, 0), _contentManager);
             _currentRoomOrigin = new Vector2(0, 0);
             _currentRoom = _rooms[_currentRoomOrigin];
-            _currentRoom.AddPlayer(_player, _currentRoomOrigin);
+            _currentRoom.AddPlayer(_player, new Vector2(0, 0));
         }
+        public void LoadContent()
+        {
+            _currentRoom.LoadContent();
+        }
+        public void Update()
+        {
+            _currentRoom.Update();
+            CheckForDoorCollision();
+        }
+        public void Draw(SpriteBatch spriteBatch)
+        {
+            _currentRoom.Draw(spriteBatch);
+        }
+        //Other Methods
         private void LevelGeneration()
         {
             LevelGenerationManager levelGenerationManager = new LevelGenerationManager(_contentManager, _screenWidth, _screenHeight);
             _rooms = levelGenerationManager.LevelGeneration();
         }
-        public void Update()
+        private void CheckForDoorCollision()
         {
             List<object> doorCollisionData = _currentRoom.CheckDoorCollision();
-            if(doorCollisionData != null ) 
+            if (doorCollisionData != null)
             {
                 _currentRoom.RemovePlayer();
                 Vector2 enteredRoomDirection = (Vector2)doorCollisionData[1];
                 RoomManager enteredRoom = _rooms[_currentRoom.RoomOrigin + enteredRoomDirection];
                 enteredRoom.AddPlayer((PlayerController)doorCollisionData[0], enteredRoomDirection);
             }
-            _currentRoom.Update();
-        }
-        public void LoadContent()
-        {
-            foreach (var room in _rooms)
-            {
-                RoomManager actualRoom = room.Value;
-                actualRoom.LoadContent();
-            }
-        }
-        public void Draw(SpriteBatch spriteBatch)
-        {
-            _currentRoom.Draw(spriteBatch);
         }
     }
 }

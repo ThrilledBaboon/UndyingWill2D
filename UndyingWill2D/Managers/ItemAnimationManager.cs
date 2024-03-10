@@ -15,9 +15,12 @@ namespace UndyingWill2D.Managers
 {
     public class ItemAnimationManager : AnimationManager
     {
+        //Properties
         protected bool IsAttacking { get; set; }
+        //Contructor
         public ItemAnimationManager(int numberOfFrames, int numberOfColumns, Microsoft.Xna.Framework.Vector2 spriteResolution, int startColumn) : base(numberOfFrames, numberOfColumns, spriteResolution, startColumn)
         { }
+        //Core Methods
         public void Update(bool isAttacking)
         {
             IsAttacking = isAttacking;
@@ -28,6 +31,7 @@ namespace UndyingWill2D.Managers
                 NewAttackFrame();
             }
         }
+        //Other Methods
         public Microsoft.Xna.Framework.Rectangle Attack()
         {
             NewAttackFrame();
@@ -48,6 +52,5 @@ namespace UndyingWill2D.Managers
                 _rowPosition++;
             }
         }
-        
     }
 }

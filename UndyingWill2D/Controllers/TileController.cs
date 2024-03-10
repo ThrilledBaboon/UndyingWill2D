@@ -12,8 +12,8 @@ namespace UndyingWill2D.Controllers
 {
     public class TileController : SpriteController
     {     
+        //Contstructor
         public TileController(Texture2D texture, int scale, Vector2 position, ContentManager contentManager) : base(texture, scale, position, contentManager)
         { }
-
     }
 }

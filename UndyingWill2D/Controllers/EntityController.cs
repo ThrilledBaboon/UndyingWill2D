@@ -15,27 +15,29 @@ using UndyingWill2D.Managers;
 namespace UndyingWill2D.Controllers
 {
     public class EntityController : SpriteController
-    { 
-        protected Vector2 _moveDirection;
+    {
+        //Item Fields
+        protected List<ItemController> _hotBar = new List<ItemController>();
+        protected int _currentHotBarIndex;
         protected ItemController _bow;
         protected ItemController _sword;
         protected ItemController _shield;
+        //Move Fields
+        protected Vector2 _moveDirection;
         protected float _moveSpeed;
-        protected List<ItemController> _hotBar = new List<ItemController>();
-        protected int _currentHotBarIndex;
-
-        public Texture2D PlayerAnimation { get; private set; }
-
-        //Property
+        //Room Fields
+        protected int _roomHeight;
+        protected int _roomLength;
+        //Properties
         public WalkAnimationManager WalkAnimationManager { get; private set; }
         public bool IsMoving { get; set; }
         public int Health { get; set; }
         public bool IsAlive { get; set; }
-        
+        public Texture2D PlayerAnimation { get; private set; }
         //Constructor
-        public EntityController(Texture2D texture, int scale, Vector2 position, ContentManager contentManager) :base(texture, scale, position, contentManager)
+        public EntityController(Texture2D texture, int scale, Vector2 roomPosition, ContentManager contentManager) :base(texture, scale, roomPosition, contentManager)
         {
-            Vector2 weaponPosition = new Vector2(position.X + scale / 2, position.Y);
+            Vector2 weaponPosition = new Vector2(roomPosition.X + scale / 2, roomPosition.Y);
             //Texture2D weaponTexture = contentManager.Load<Texture2D>("SwordAnimation");
             //_weapon = new ItemController("Sword", weaponTexture, scale, weaponPosition, contentManager);
             Texture2D bowTexture = contentManager.Load<Texture2D>("BowAnimation");
@@ -49,18 +51,19 @@ namespace UndyingWill2D.Controllers
             _hotBar.Add(_shield);
             _currentHotBarIndex = 0;
         }
-        //Methods
-        public virtual void Update()
-        {
-            HandleInput();
-            ItemController heldItem = _hotBar[_currentHotBarIndex];
-            heldItem.Update(_position);
-        }
-
+        //Core Methods
         public void LoadContent()
         {
             PlayerAnimation = _contentManager.Load<Texture2D>("PlayerAnimation");
             WalkAnimationManager = new(2, 2, new Vector2(32, 32), 1);
+        }
+        public virtual void Update(int roomHeight, int roomLength)
+        {
+            _roomHeight = roomHeight;
+            _roomLength = roomLength;
+            HandleInput();
+            ItemController heldItem = _hotBar[_currentHotBarIndex];
+            heldItem.Update(RoomPosition);
         }
         public override void Draw(SpriteBatch spriteBatch)
         {
@@ -72,6 +75,7 @@ namespace UndyingWill2D.Controllers
 
             }
         }
+        //Other Methods
         public virtual void HandleInput() 
         {
 
@@ -86,7 +90,7 @@ namespace UndyingWill2D.Controllers
                 moveDirection.Normalize();
             }
             Vector2 moveVelocity = moveDirection * moveSpeed;
-            _position += moveVelocity;
+            RoomPosition += moveVelocity;
         }
         public void OnAttack(Point point)
         {

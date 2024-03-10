@@ -15,15 +15,15 @@ namespace UndyingWill2D.Controllers
 {
     public class PlayerController : EntityController
     {
-        List<ItemController> _inventory = new List<ItemController>();
-
         //Fields
-        float _dashSpeed = 100f;
-        //counters
+        List<ItemController> _inventory = new List<ItemController>();
+        float _dashSpeed = 50f;
+        private Vector2 _RoomArea { get; set; }
+        //Counters
         float _timeSinceLastDash = 0f;
         float _timeSinceLastSwitchHotBar = 0f;
         float _timeSinceLastAttack = 0f;
-        //cooldowns
+        //Cooldowns
         float _dashColldown = 150f;
         float _switchHotBarColldown = 15f;
         float _attackColldown = 45f;
@@ -33,23 +33,27 @@ namespace UndyingWill2D.Controllers
         {
             get
             {
-                return new Microsoft.Xna.Framework.Rectangle((int)Position.X, (int)Position.Y, Scale, Scale);
+                return new Microsoft.Xna.Framework.Rectangle((int)RoomPosition.X, (int)RoomPosition.Y, Scale, Scale);
             }
         }
-        public PlayerController(Texture2D texture, int scale, Vector2 positions, ContentManager contentManager) : base(texture, scale, positions, contentManager)
+        //Contructor
+        public PlayerController(Texture2D texture, int scale, Vector2 roomPosition, ContentManager contentManager) : base(texture, scale, roomPosition, contentManager)
         {
-            _moveSpeed = 2.5f;
+            _moveSpeed = 1f;
         }
-        public override void Update()
+        //Core Methods
+        public override void Update(int roomHeight, int roomLength)
         {
+            _roomHeight = roomHeight;
+            _roomLength = roomLength;
             HandleInput();
             ItemController heldItem = _hotBar[_currentHotBarIndex];
-            heldItem.Update(_position);
+            heldItem.Update(RoomPosition);
             _timeSinceLastDash++;
             _timeSinceLastAttack++;
             _timeSinceLastSwitchHotBar++;
         }
-
+        //Additional Methods
         public override void HandleInput()
         {
             KeyboardState keyboardState = Keyboard.GetState();
@@ -110,7 +114,6 @@ namespace UndyingWill2D.Controllers
             }
             OnMove(_moveDirection, _moveSpeed);
         }
-
         public override void OnMove(Vector2 moveDirection, float moveSpeed)
         {
             if (moveDirection == Vector2.Zero) { IsMoving = false; }
@@ -120,20 +123,27 @@ namespace UndyingWill2D.Controllers
             {
                 moveDirection.Normalize();
             }
-            Vector2 moveVelocity = moveDirection * moveSpeed;
-            _position += moveVelocity;
+            Vector2 moveVelocity = moveDirection/14 * moveSpeed;
+            Vector2 currentRoomPosition = RoomPosition;
+            Vector2 roomArea = new Vector2(_roomLength, _roomHeight);
+            Vector2 positionToMoveTo = currentRoomPosition + moveVelocity;
+            bool isMovePossible = (0 <= positionToMoveTo.X &&
+                positionToMoveTo.X <= roomArea.X) 
+                && (0 <= positionToMoveTo.Y && 
+                positionToMoveTo.Y <= roomArea.Y);
+            if (isMovePossible)
+            {
+                RoomPosition += moveVelocity;
+            }
         }
-
         public void OnDash(Vector2 _moveDirection)
         {
             OnMove(_moveDirection, _dashSpeed);
         }
-
         public override void OnBlock(Point point)
         {
 
         }
-
         public void ChangeHotBarItem(int index)
         {
             _currentHotBarIndex = index;
@@ -157,17 +167,14 @@ namespace UndyingWill2D.Controllers
             // will likely need to check closest interactable
             // sounds like i will need an interactable class as well then 
         }
-
         private bool FindInteractablesInRange()
         {
             throw new NotImplementedException();
         }
-
         private object ClosestInteractable()
         {
             throw new NotImplementedException();
         }
-
         public void OnDrop()
         {
             _hotBar.RemoveAt(_currentHotBarIndex);

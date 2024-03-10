@@ -12,12 +12,14 @@ namespace UndyingWill2D
 {
     public class Main : Game
     {
+        //Fields
         public GraphicsDeviceManager _graphics;
         public SpriteBatch _spriteBatch;
         private LevelManager _level;
+        //Screen Fields
         public int _screenWidth;
         public int _screenHeight;
-
+        //Constructors
         public Main()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -29,6 +31,7 @@ namespace UndyingWill2D
             _graphics.PreferredBackBufferWidth = _screenWidth; 
             _graphics.PreferredBackBufferHeight = _screenHeight; 
         }
+        //Core Methods
         protected override void Initialize()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);

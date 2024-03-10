@@ -12,7 +12,9 @@ namespace UndyingWill2D.Managers
 {
     public class WalkAnimationManager : AnimationManager 
     {
+        //Properties
         protected bool IsMoving { get; set; }
+        //Constructor
         public WalkAnimationManager(int numberOfFrames, int numberOfColumns, Microsoft.Xna.Framework.Vector2 spriteResolution, int startColumn) : base(numberOfFrames, numberOfColumns, spriteResolution, startColumn)
         {
             this._numberOfFrames = numberOfFrames;
@@ -27,6 +29,7 @@ namespace UndyingWill2D.Managers
             _rowPosition = 0;
             _columnPosition = startColumn;
         }
+        //Core Methods
         public void Update(bool isMoving)
         {
             IsMoving = isMoving;
@@ -37,6 +40,7 @@ namespace UndyingWill2D.Managers
                 NewWalkFrame();
             }
         }
+        //Other Methods
         private void NewWalkFrame()
         {
             _currentFrame++;

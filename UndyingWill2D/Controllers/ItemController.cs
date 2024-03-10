@@ -17,6 +17,7 @@ namespace UndyingWill2D.Controllers
         bool _hasAttacked;
         Rectangle frameRectangle;
         String _type;
+        //Constructor
         public ItemController(string type, Texture2D texture, int scale, Vector2 position, ContentManager contentManager) : base(texture, scale, position, contentManager)
         {
             this._type = type;
@@ -33,11 +34,13 @@ namespace UndyingWill2D.Controllers
                     break;
             }
         }
-
+        //Core Methods
         public void Update(Vector2 OwnerPosition)
         {
-            _position.X = OwnerPosition.X + _scale/2;
-            _position.Y = OwnerPosition.Y + 10;
+            Vector2 roomPosition = RoomPosition;
+            roomPosition.X = OwnerPosition.X + _scale/2;
+            roomPosition.Y = OwnerPosition.Y + 10;
+            RoomPosition = roomPosition;
             _itemAnimationManager.Update(_hasAttacked);
         }
         public override void Draw(SpriteBatch spriteBatch)
@@ -56,7 +59,7 @@ namespace UndyingWill2D.Controllers
                 _hasAttacked = false;
             }
         }
-
+        // Other Methods
         public void Attack()
         {
             _hasAttacked = true;

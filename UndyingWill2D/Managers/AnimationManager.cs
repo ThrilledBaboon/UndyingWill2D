@@ -12,18 +12,18 @@ namespace UndyingWill2D.Managers
 {
     public class AnimationManager
     {
+        //Animation Information Fields
         protected int _numberOfFrames;
         protected int _numberOfColumns;
         protected Microsoft.Xna.Framework.Vector2 _spriteResolution;
-
+        protected int _startColumn;
+        //Animation Frame Fields
         protected int _frameCount;
         protected int _currentFrame;
         protected int _animationInterval;
-
         protected int _rowPosition;
         protected int _columnPosition;
-        protected int _startColumn;
-
+        //Contructors
         public AnimationManager(int numberOfFrames, int numberOfColumns, Microsoft.Xna.Framework.Vector2 spriteResolution, int startColumn) 
         {
             this._numberOfFrames = numberOfFrames;
@@ -38,6 +38,7 @@ namespace UndyingWill2D.Managers
             _rowPosition = 0;
             _columnPosition = startColumn;
         }
+        //Other Methods
         public void ResetAnimation()
         {
             _currentFrame = 0;

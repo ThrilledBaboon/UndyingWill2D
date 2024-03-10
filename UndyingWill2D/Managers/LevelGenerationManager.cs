@@ -13,17 +13,21 @@ namespace UndyingWill2D.Managers
 {
     public class LevelGenerationManager
     {
+        //Fields
         ContentManager _contentManager;
         Vector2 _roomPosition;
+        //Direction Fields
         Vector2 _up = new Vector2(0, -1);
         Vector2 _down = new Vector2(0, 1);
         Vector2 _left = new Vector2(-1, 0);
         Vector2 _right = new Vector2(1, 0);
+        //Constructor
         public LevelGenerationManager(ContentManager contentManager, int screenWidth, int screenHeight) 
         {
             _contentManager = contentManager;
             _roomPosition = new Vector2(screenWidth / 2, screenHeight / 2);
         }
+        //Other Methods
         public Dictionary<Vector2, RoomManager> LevelGeneration()
         {
             Dictionary<Vector2, RoomManager> dictionaryOfRooms;
