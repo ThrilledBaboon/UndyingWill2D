@@ -122,8 +122,7 @@ namespace UndyingWill2D.Managers
                     foreach (DoorController door in _doors) 
                     { door.CloseDoor(); }
                 }
-                //if (keyboardState.IsKeyDown(Keys.J))
-                if (true)
+                if (keyboardState.IsKeyDown(Keys.J))
                 {
                     foreach (DoorController door in _doors)
                     { door.OpenDoor(); }
@@ -242,10 +241,12 @@ namespace UndyingWill2D.Managers
             {
                 Vector2 doorPosition = door.RoomPosition;
                 Vector2 playerPosition = _player.RoomPosition;
-                if (doorPosition.X == playerPosition.X &&
-                    doorPosition.Y == playerPosition.Y &&
-                    door.IsDoorOpen == true)
+                bool isThereACollision = doorPosition.X == (int)playerPosition.X &&
+                    doorPosition.Y == (int)playerPosition.Y &&
+                    door.IsDoorOpen == true;
+                if (isThereACollision)
                 {
+                    Debug.WriteLine("Collision at: " + doorPosition);
                     List<object> list = new();
                     list.Add(_player);
                     list.Add(door.DoorDirection);
@@ -378,9 +379,11 @@ namespace UndyingWill2D.Managers
         public void AddPlayer(PlayerController player, Vector2 enteredRoomDirection)
         {
             Debug.WriteLine("Start of Add Player: " + player.RoomPosition);
+            Debug.WriteLine("Player Entered from: " + enteredRoomDirection);
             Vector2 inverseOfEnteredDirection = enteredRoomDirection * new Vector2(-1, -1);
-            Vector2 something = inverseOfEnteredDirection * new Vector2(7, 6);
-            String positionString = something.X.ToString() + ", " + something.Y.ToString();
+            Vector2 DirectionOfDoorEnteredThrough = inverseOfEnteredDirection * new Vector2(7, 6);
+            Debug.WriteLine("Player Entered At door: " + DirectionOfDoorEnteredThrough);
+            String positionString = DirectionOfDoorEnteredThrough.X.ToString() + ", " + DirectionOfDoorEnteredThrough.Y.ToString();
             switch (positionString)
             {
                 case "-0, 6":

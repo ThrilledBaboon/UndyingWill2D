@@ -42,7 +42,7 @@ namespace UndyingWill2D.Managers
             int attemptOnSameRoom = 0;
             while (dictionaryOfRooms.Count < maxNumberOfRooms)
             {
-                if(attemptOnSameRoom > 5)
+                if(attemptOnSameRoom > 1)
                 {
                     return LevelGeneration();
                 }
