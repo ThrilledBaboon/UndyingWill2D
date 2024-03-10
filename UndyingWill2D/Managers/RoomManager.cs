@@ -143,8 +143,11 @@ namespace UndyingWill2D.Managers
             }
             foreach (DoorController door in _doors)
             {
-                door.ActualPosition = RoomGridToWorldCoordinatesMap(door);
-                door.Draw(spriteBatch);
+                if(door.IsDoorOpen == false)
+                {
+                    door.ActualPosition = RoomGridToWorldCoordinatesMap(door);
+                    door.Draw(spriteBatch);
+                }
             }
             foreach (EntityController entity in _entities)
             {
@@ -236,12 +239,11 @@ namespace UndyingWill2D.Managers
             {
                 Vector2 doorPosition = door.RoomPosition;
                 Vector2 playerPosition = _player.RoomPosition;
-                bool isThereACollision = doorPosition.X == (int)playerPosition.X &&
-                    doorPosition.Y == (int)playerPosition.Y &&
+                bool isThereACollision = doorPosition.X == (int)(playerPosition.X + 0.5f) &&
+                    doorPosition.Y == (int)(playerPosition.Y + 0.5f) &&
                     door.IsDoorOpen == true;
                 if (isThereACollision)
                 {
-                    Debug.WriteLine("Collision at: " + doorPosition);
                     List<object> list = new();
                     list.Add(_player);
                     list.Add(door.DoorDirection);
@@ -376,32 +378,27 @@ namespace UndyingWill2D.Managers
         //Player Related Methods
         public void AddPlayer(PlayerController player, Vector2 enteredRoomDirection)
         {
-            Debug.WriteLine("Start of Add Player: " + player.RoomPosition);
-            Debug.WriteLine("Player Entered from: " + enteredRoomDirection);
-            Vector2 inverseOfEnteredDirection = enteredRoomDirection * new Vector2(-1, -1);
-            Vector2 DirectionOfDoorEnteredThrough = inverseOfEnteredDirection * new Vector2(7, 6);
-            Debug.WriteLine("Player Entered At door: " + DirectionOfDoorEnteredThrough);
+            Vector2 DirectionOfDoorEnteredThrough = enteredRoomDirection + new Vector2(0, 0);
             String positionString = DirectionOfDoorEnteredThrough.X.ToString() + ", " + DirectionOfDoorEnteredThrough.Y.ToString();
             switch (positionString)
             {
-                case "-0, 6":
-                    player.RoomPosition = new Vector2(_roomLength / 2, 0); 
+                case "0, 1":
+                    player.RoomPosition = new Vector2(_roomLength / 2, 1); 
                     break;
-                case "-0, -6":
-                    player.RoomPosition = new Vector2(_roomLength / 2, _roomHeight);
+                case "0, -1":
+                    player.RoomPosition = new Vector2(_roomLength / 2, _roomHeight - 1);
                     break;
-                case "7, -0":
-                    player.RoomPosition = new Vector2(0, _roomHeight / 2);
+                case "1, 0":
+                    player.RoomPosition = new Vector2(1, _roomHeight / 2);
                     break;
-                case "-7, -0":
-                    player.RoomPosition = new Vector2(_roomLength, _roomHeight / 2);
+                case "-1, 0":
+                    player.RoomPosition = new Vector2(_roomLength - 1, _roomHeight / 2 );
                     break;
-                case "-0, -0":
+                case "0, 0":
                     player.RoomPosition = new Vector2(_roomLength / 2, _roomHeight / 2);
                     break;
             }
             _player = player;
-            Debug.WriteLine("End of Add Player: " + _player.RoomPosition);
         }
         public void RemovePlayer()
         {
