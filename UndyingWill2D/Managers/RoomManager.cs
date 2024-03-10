@@ -39,6 +39,7 @@ namespace UndyingWill2D.Managers
         Texture2D _rightSideDoorTile;
         Texture2D _leftSideDoorTile;
         Texture2D _bottomDoorTile;
+        Texture2D _enemy;
         //Other Fields
         ContentManager _contentManager;
         Vector2 _screenPosition;
@@ -91,6 +92,7 @@ namespace UndyingWill2D.Managers
             _leftSideDoorTile = _contentManager.Load<Texture2D>("LeftSideDoor");
             _rightSideDoorTile = _contentManager.Load<Texture2D>("RightSideDoor");
             _bottomDoorTile = _contentManager.Load<Texture2D>("BottomDoor");
+            _enemy = _contentManager.Load<Texture2D>("SkeletonAnimation");
             _floors = new List<TileController>();
             CreateFloor();
             CreateWalls();
@@ -230,8 +232,26 @@ namespace UndyingWill2D.Managers
             }
         }
         private void CreateEntities() 
-        { 
-            //to do
+        {
+            List<Vector2> possibleEnemySpawnLocation = 
+                new List<Vector2>()
+                { 
+                    new Vector2(3, 2),
+                    new Vector2(11, 2),
+                    new Vector2(3, 8),
+                    new Vector2(11, 8),
+                };
+            List<int> numberOfPossibleEnemies = new List<int>() { 1, 2, 3, 4};
+            int numberOfEnemiesIndex = _random.Next(numberOfPossibleEnemies.Count - 1);
+            int numberOfEnemies = numberOfPossibleEnemies[numberOfEnemiesIndex];
+            for (int i = 0; i <= numberOfEnemies; i++)
+            {
+                int enemiesSpawnLocationIndex = _random.Next(possibleEnemySpawnLocation.Count - 1);
+                Vector2 enemiesSpawnLocation = possibleEnemySpawnLocation[enemiesSpawnLocationIndex];
+                MobController enemy = new MobController(_enemy, 90, enemiesSpawnLocation, _contentManager);
+                _entities.Add(enemy);
+            }
+
         }
         public List<object> CheckDoorCollision()
         {

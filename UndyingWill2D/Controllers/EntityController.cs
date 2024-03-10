@@ -33,7 +33,7 @@ namespace UndyingWill2D.Controllers
         public bool IsMoving { get; set; }
         public int Health { get; set; }
         public bool IsAlive { get; set; }
-        public Texture2D PlayerAnimation { get; private set; }
+        public Texture2D SpriteAnimation { get; private set; }
         //Constructor
         public EntityController(Texture2D texture, int scale, Vector2 roomPosition, ContentManager contentManager) :base(texture, scale, roomPosition, contentManager)
         {
@@ -54,7 +54,7 @@ namespace UndyingWill2D.Controllers
         //Core Methods
         public void LoadContent()
         {
-            PlayerAnimation = _contentManager.Load<Texture2D>("PlayerAnimation");
+            SpriteAnimation = _contentManager.Load<Texture2D>("PlayerAnimation");
             WalkAnimationManager = new(2, 2, new Vector2(32, 32), 1);
         }
         public virtual void Update(int roomHeight, int roomLength)
