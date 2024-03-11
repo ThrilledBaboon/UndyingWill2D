@@ -19,6 +19,7 @@ namespace UndyingWill2D.Managers
         bool _previousFrameIsAttacked = false;
         //Properties
         protected bool IsAttacking { get; set; }
+        public Microsoft.Xna.Framework.Rectangle NextFrameRect { get; set; }
         //Contructor
         public ItemAnimationManager(int numberOfFrames, int numberOfColumns, Microsoft.Xna.Framework.Vector2 spriteResolution, int startColumn) : 
         base(numberOfFrames, numberOfColumns, spriteResolution, startColumn)
@@ -26,32 +27,30 @@ namespace UndyingWill2D.Managers
         //Core Methods
         public void Update(bool isAttacking)
         {
-            _frameCount++;
+            _frameCount+=3;
             IsAttacking = isAttacking;
-        }
-        //Other Methods
-        public Microsoft.Xna.Framework.Rectangle Attack()
-        {
-            Microsoft.Xna.Framework.Rectangle frameRect;
-            if (_frameCount > _animationInterval && ((_previousFrameIsAttacked == false && IsAttacking) || _previousFrameIsAttacked))
+            if (_frameCount > _animationInterval)
             {
                 _frameCount = 0;
                 if (_previousFrameIsAttacked == false && IsAttacking)
                 {
-                    //start attacking
+                    //start attack
                     _previousFrameIsAttacked = true;
                     NewAttackFrame();
                 }
                 else if (_previousFrameIsAttacked)
                 {
+                    //continue attack
                     _previousFrameIsAttacked = false;
                     NewAttackFrame();
                 }
-                frameRect = GetFrame();
-                return frameRect;
+                else
+                {
+                    NextFrameRect = Microsoft.Xna.Framework.Rectangle.Empty;
+                    return;
+                }
+                NextFrameRect = GetFrame();
             }
-            frameRect = Microsoft.Xna.Framework.Rectangle.Empty;
-            return frameRect;
         }
         private void NewAttackFrame()
         {

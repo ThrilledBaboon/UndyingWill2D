@@ -15,7 +15,8 @@ namespace UndyingWill2D.Controllers
     public class MobController : EntityController
     {
         //Property
-        public Rectangle SeeAbleArea {  get; set; } 
+        public Rectangle SeeAbleArea {  get; set; }
+        public Rectangle AttackAbleArea { get; set; }
         //Contructor
         public MobController(Texture2D texture, int scale, Vector2 roomPosition, ContentManager contentManager) : base(texture, scale, roomPosition, contentManager) 
         {
@@ -26,11 +27,11 @@ namespace UndyingWill2D.Controllers
             _roomHeight = roomHeight;
             _roomLength = roomLength;
             SeeAbleArea = new Rectangle((int)(RoomPosition.X - 2), (int)(RoomPosition.Y - 2), 6, 6);
+            AttackAbleArea = new Rectangle((int)(RoomPosition.X - 1), (int)(RoomPosition.Y - 1), 2, 2);
             _heldItem.Update(RoomPosition, _isAttacking);
         }
         public void MobMovement(Rectangle playerCollider, Vector2 playerPosition)
         {
-            Debug.WriteLine(playerCollider);
             if (SeeAbleArea.Contains(playerCollider)) 
             {
                 _moveDirection = playerPosition - RoomPosition;

@@ -52,7 +52,7 @@ namespace UndyingWill2D.Controllers
             _timeSinceLastAttack++;
             _timeSinceLastSwitchHotBar++;
         }
-        //Additional Methods
+        //Other Methods
         public void HandleInput()
         {
             KeyboardState keyboardState = Keyboard.GetState();
@@ -84,6 +84,7 @@ namespace UndyingWill2D.Controllers
                 _timeSinceLastAttack = 0f;
                 _isAttacking = true;
                 _previouslyAttacking = true;
+                Debug.WriteLine(_isAttacking);
             }
             if (_timeSinceLastDash >= _dashColldown && keyboardState.IsKeyDown(Keys.LeftShift)) 
             {

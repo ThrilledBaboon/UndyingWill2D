@@ -25,7 +25,7 @@ namespace UndyingWill2D.Controllers
             switch (_type)
             {
                 case "Sword":
-                    _itemAnimationManager = new ItemAnimationManager(2, 2, new Vector2(32, 32), 0);
+                    _itemAnimationManager = new ItemAnimationManager(2, 2, new Vector2(32, 32), 1);
                     break;
             }
         }
@@ -33,15 +33,14 @@ namespace UndyingWill2D.Controllers
         public void Update(Vector2 OwnerPosition, bool isAttacking)
         {
             RoomPosition = OwnerPosition;
-            _hasAttacked = isAttacking;
             _itemAnimationManager.Update(isAttacking);
         }
         public override void Draw(SpriteBatch spriteBatch)
         {
-            _frameRectangle = _itemAnimationManager.Attack();
+            _frameRectangle = _itemAnimationManager.NextFrameRect;
             if (!_frameRectangle.IsEmpty) 
             { 
-            spriteBatch.Draw(_texture, Rectangle, _frameRectangle, Color.White);
+                spriteBatch.Draw(_texture, Rectangle, _frameRectangle, Color.White);
             }
         }
             
