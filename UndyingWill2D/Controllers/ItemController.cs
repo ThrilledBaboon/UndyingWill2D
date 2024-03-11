@@ -26,7 +26,9 @@ namespace UndyingWill2D.Controllers
             {
                 float swordX;
                 float swordY;
-                Vector2 direction = new Vector2((int)(_mouseDirection.X + 0.5f), (int)(_mouseDirection.Y + 0.5f));
+                int mouseDirectionY = (int)(_mouseDirection.Y + 0.5f);
+                int mouseDirectionX = (int)(_mouseDirection.X + 0.5f);
+                Vector2 direction = new Vector2(mouseDirectionX, mouseDirectionY);
                 direction.Normalize();
                 String directionString = direction.X.ToString() + ", " + direction.Y.ToString();
                 switch (directionString)
@@ -34,38 +36,44 @@ namespace UndyingWill2D.Controllers
                     case "1, 0":
                         swordX = RoomPosition.X + direction.X ;
                         swordY = RoomPosition.Y;
+                        RoomPosition = new Vector2(swordX, swordY);
                         break;
                     case "-1, 0":
                         swordX = RoomPosition.X - direction.X;
                         swordY = RoomPosition.Y;
+                        RoomPosition = new Vector2(swordX, swordY);
                         break;
                     case "0, 1":
                         swordX = RoomPosition.X;
                         swordY = RoomPosition.Y + direction.Y;
+                        RoomPosition = new Vector2(swordX, swordY);
                         break;
                     case "0, -1":
                         swordX = RoomPosition.X;
                         swordY = RoomPosition.Y - direction.Y;
-                        RoomPosition = new Vector2 (swordX, swordY);
+                        RoomPosition = new Vector2(swordX, swordY);
                         break;
                 }
-                Vector2 itemPosition = ActualPosition;
+                Vector2 itemActualPosition = ActualPosition;
+                Vector2 itemPosition = RoomPosition;
                 if (itemPosition.X <= 7)
                 {
-                    itemPosition.X = ActualPosition.X + 50 * -(7 - itemPosition.X);
+                    itemActualPosition.X = ActualPosition.X + 50 * -(7 - itemPosition.X);
                 }
                 else if (itemPosition.X <= 15)
                 {
-                    itemPosition.X = ActualPosition.X + 50 * (itemPosition.X - 7);
+                    itemActualPosition.X = ActualPosition.X + 50 * (itemPosition.X - 7);
                 }
                 if (itemPosition.Y <= 5)
                 {
-                    itemPosition.Y = ActualPosition.Y + 50 * -(5 - itemPosition.Y);
+                    itemActualPosition.Y = ActualPosition.Y + 50 * -(5 - itemPosition.Y);
                 }
                 else if (itemPosition.Y <= 11)
                 {
-                    itemPosition.Y = ActualPosition.Y + 50 * (itemPosition.Y - 5);
+                    itemActualPosition.Y = ActualPosition.Y + 50 * (itemPosition.Y - 5);
                 }
+                RoomPosition = itemPosition;
+                ActualPosition = itemActualPosition;
                 return new Rectangle((int)ActualPosition.X, (int)ActualPosition.Y, _scale, _scale);
             } 
         }
