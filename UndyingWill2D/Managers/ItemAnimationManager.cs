@@ -17,6 +17,7 @@ namespace UndyingWill2D.Managers
     public class ItemAnimationManager : AnimationManager
     {
         bool _previousFrameIsAttacked = false;
+        int _attackCounter = 0;
         //Properties
         public bool IsAttacking { get; set; }
         public Microsoft.Xna.Framework.Rectangle NextFrameRect { get; set; }
@@ -27,7 +28,6 @@ namespace UndyingWill2D.Managers
         //Core Methods
         public void Update()
         {
-            int attackCounter;
             _frameCount++;
             if ((_frameCount > _animationInterval) || (_previousFrameIsAttacked == false && IsAttacking))
             {
@@ -37,6 +37,7 @@ namespace UndyingWill2D.Managers
                 {
                     if (_previousFrameIsAttacked == false && IsAttacking)
                     {
+                        _attackCounter += 1;
                         _previousFrameIsAttacked = true;
                         NewAttackFrame();
                     }
