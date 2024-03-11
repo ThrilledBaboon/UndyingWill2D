@@ -36,6 +36,7 @@ namespace UndyingWill2D.Controllers
         public bool IsAlive { get; set; }
         public Rectangle Collision {  get; set; }
         public Texture2D SpriteAnimation { get; private set; }
+        public Vector2 MouseDirection { get; set; }
         //Constructor
         public EntityController(Texture2D texture, int scale, Vector2 roomPosition, ContentManager contentManager) :base(texture, scale, roomPosition, contentManager)
         {
@@ -61,7 +62,7 @@ namespace UndyingWill2D.Controllers
             _roomHeight = roomHeight;
             _roomLength = roomLength;
             Collision = new Rectangle((int)(RoomPosition.X + 0.5f), (int)(RoomPosition.Y + 0.5f), 1, 1);
-            _heldItem.Update(RoomPosition, _isAttacking);
+            _heldItem.Update(RoomPosition, _isAttacking, MouseDirection);
         }
         public new ItemController Draw(SpriteBatch spriteBatch)
         {
@@ -80,14 +81,6 @@ namespace UndyingWill2D.Controllers
             }
             Vector2 moveVelocity = moveDirection * moveSpeed;
             RoomPosition += moveVelocity;
-        }
-        public void OnStun()
-        {
-
-        }
-        public virtual void OnBlock(Point point)
-        {
-
         }
     }
 }

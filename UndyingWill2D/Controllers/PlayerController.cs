@@ -18,7 +18,8 @@ namespace UndyingWill2D.Controllers
         //Fields
         List<ItemController> _inventory = new List<ItemController>();
         float _dashSpeed = 50f;
-        private Vector2 _RoomArea { get; set; }
+        Vector2 _roomArea;
+        Point _mousePoint;
         //Counters
         float _timeSinceLastDash = 0f;
         float _timeSinceLastSwitchHotBar = 0f;
@@ -47,7 +48,7 @@ namespace UndyingWill2D.Controllers
             HandleInput();
             Collision = new Rectangle((int)(RoomPosition.X + 0.5f), (int)(RoomPosition.Y + 0.5f), 1, 1);
             _heldItem = _hotBar[_currentHotBarIndex];
-            _heldItem.Update(RoomPosition, _isAttacking);
+            _heldItem.Update(RoomPosition, _isAttacking, MouseDirection);
             _timeSinceLastDash++;
             _timeSinceLastAttack++;
             _timeSinceLastSwitchHotBar++;
@@ -84,16 +85,13 @@ namespace UndyingWill2D.Controllers
                 _timeSinceLastAttack = 0f;
                 _isAttacking = true;
                 _previouslyAttacking = true;
-                Debug.WriteLine(_isAttacking);
+                _mousePoint = mouseState.Position;
+                CalculateMousePointToMouseDirectionFromPlayer();
             }
             if (_timeSinceLastDash >= _dashColldown && keyboardState.IsKeyDown(Keys.LeftShift)) 
             {
                 _timeSinceLastDash = 0f;
                 OnDash(_moveDirection);
-            }
-            if (mouseState.RightButton == ButtonState.Pressed) 
-            {
-                OnBlock(mouseState.Position); 
             }
             if (_timeSinceLastSwitchHotBar >= _switchHotBarColldown)
             {
@@ -108,6 +106,28 @@ namespace UndyingWill2D.Controllers
             }
             OnMove(_moveDirection, _moveSpeed);
         }
+
+        private void CalculateMousePointToMouseDirectionFromPlayer()
+        {
+            Vector2 mouseVector = new Vector2(_mousePoint.X, _mousePoint.Y);
+            MouseDirection = mouseVector - ActualPosition;
+            if (MouseDirection.X > MouseDirection.Y) 
+            {
+                float mouseDirectionY = 0;
+                MouseDirection = new Vector2(MouseDirection.X, mouseDirectionY);
+            }
+            else if(MouseDirection.X < MouseDirection.Y)
+            {
+                float mouseDirectionX = 0;
+                MouseDirection = new Vector2(mouseDirectionX, MouseDirection.Y);
+            }
+            else
+            {
+                return;
+            }
+            MouseDirection.Normalize();
+        }
+
         public override void OnMove(Vector2 moveDirection, float moveSpeed)
         {
             if (moveDirection == Vector2.Zero) { IsMoving = false; }
@@ -133,10 +153,6 @@ namespace UndyingWill2D.Controllers
         public void OnDash(Vector2 _moveDirection)
         {
             OnMove(_moveDirection, _dashSpeed);
-        }
-        public override void OnBlock(Point point)
-        {
-
         }
         public void ChangeHotBarItem(int index)
         {

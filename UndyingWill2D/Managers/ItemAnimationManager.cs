@@ -27,7 +27,7 @@ namespace UndyingWill2D.Managers
         //Core Methods
         public void Update(bool isAttacking)
         {
-            _frameCount+=3;
+            _frameCount+=5;
             IsAttacking = isAttacking;
             if (_frameCount > _animationInterval)
             {

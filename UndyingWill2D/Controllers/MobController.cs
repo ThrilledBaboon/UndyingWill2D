@@ -28,7 +28,7 @@ namespace UndyingWill2D.Controllers
             _roomLength = roomLength;
             SeeAbleArea = new Rectangle((int)(RoomPosition.X - 2), (int)(RoomPosition.Y - 2), 6, 6);
             AttackAbleArea = new Rectangle((int)(RoomPosition.X - 1), (int)(RoomPosition.Y - 1), 2, 2);
-            _heldItem.Update(RoomPosition, _isAttacking);
+            _heldItem.Update(RoomPosition, _isAttacking, MouseDirection);
         }
         public void MobMovement(Rectangle playerCollider, Vector2 playerPosition)
         {
