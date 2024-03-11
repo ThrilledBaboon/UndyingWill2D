@@ -38,27 +38,31 @@ namespace UndyingWill2D.Controllers
         }
         //Contructor
         public PlayerController(Texture2D texture, int scale, Vector2 roomPosition, ContentManager contentManager) : base(texture, scale, roomPosition, contentManager)
-        {
-            _moveSpeed = 1f;
-        }
+        { _moveSpeed = 1f; }
         //Core Methods
         public override void Update(int roomHeight, int roomLength)
         {
             _roomHeight = roomHeight;
             _roomLength = roomLength;
             HandleInput();
-            ItemController heldItem = _hotBar[_currentHotBarIndex];
-            heldItem.Update(RoomPosition);
+            Collision = new Rectangle((int)(RoomPosition.X + 0.5f), (int)(RoomPosition.Y + 0.5f), 1, 1);
+            _heldItem = _hotBar[_currentHotBarIndex];
+            _heldItem.Update(RoomPosition, _isAttacking);
             _timeSinceLastDash++;
             _timeSinceLastAttack++;
             _timeSinceLastSwitchHotBar++;
         }
         //Additional Methods
-        public override void HandleInput()
+        public void HandleInput()
         {
             KeyboardState keyboardState = Keyboard.GetState();
             MouseState mouseState = Mouse.GetState();
             _moveDirection = Vector2.Zero;
+            if (_previouslyAttacking)
+            {
+                _isAttacking = false;
+                _previouslyAttacking = _isAttacking;
+            }
             if (keyboardState.IsKeyDown(Keys.W))
             {
                 _moveDirection.Y += -1;
@@ -78,7 +82,8 @@ namespace UndyingWill2D.Controllers
             if (_timeSinceLastAttack >= _attackColldown && mouseState.LeftButton == ButtonState.Pressed) 
             {
                 _timeSinceLastAttack = 0f;
-                OnAttack(mouseState.Position); 
+                _isAttacking = true;
+                _previouslyAttacking = true;
             }
             if (_timeSinceLastDash >= _dashColldown && keyboardState.IsKeyDown(Keys.LeftShift)) 
             {
@@ -95,22 +100,10 @@ namespace UndyingWill2D.Controllers
                 {
                     ChangeHotBarItem(0);
                 }
-                if (keyboardState.IsKeyDown(Keys.D2))
-                {
-                    ChangeHotBarItem(1);
-                }
-                if (keyboardState.IsKeyDown(Keys.D3))
-                {
-                    ChangeHotBarItem(2);
-                }
-                if (keyboardState.IsKeyDown(Keys.F))
-                {
-                    OnInteract();
-                }
-                if (keyboardState.IsKeyDown(Keys.Q))
-                {
-                    _moveDirection.X += 1;
-                }
+            }
+            if (keyboardState.IsKeyDown(Keys.F))
+            {
+                OnInteract();
             }
             OnMove(_moveDirection, _moveSpeed);
         }
@@ -146,7 +139,7 @@ namespace UndyingWill2D.Controllers
         }
         public void ChangeHotBarItem(int index)
         {
-            _currentHotBarIndex = index;
+            _heldItem = _hotBar[index];
         }
         public void OnInteract()
         {

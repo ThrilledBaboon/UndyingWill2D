@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.Metrics;
 using System.Drawing;
 using System.Linq;
@@ -15,27 +16,41 @@ namespace UndyingWill2D.Managers
 {
     public class ItemAnimationManager : AnimationManager
     {
+        bool _previousFrameIsAttacked = false;
         //Properties
         protected bool IsAttacking { get; set; }
         //Contructor
-        public ItemAnimationManager(int numberOfFrames, int numberOfColumns, Microsoft.Xna.Framework.Vector2 spriteResolution, int startColumn) : base(numberOfFrames, numberOfColumns, spriteResolution, startColumn)
-        { }
+        public ItemAnimationManager(int numberOfFrames, int numberOfColumns, Microsoft.Xna.Framework.Vector2 spriteResolution, int startColumn) : 
+        base(numberOfFrames, numberOfColumns, spriteResolution, startColumn)
+        { _animationInterval = 15; }
         //Core Methods
         public void Update(bool isAttacking)
         {
-            IsAttacking = isAttacking;
             _frameCount++;
-            if (_frameCount > _animationInterval)
-            {
-                _frameCount = 0;
-                NewAttackFrame();
-            }
+            IsAttacking = isAttacking;
         }
         //Other Methods
         public Microsoft.Xna.Framework.Rectangle Attack()
         {
-            NewAttackFrame();
-            Microsoft.Xna.Framework.Rectangle frameRect = GetFrame();
+            Microsoft.Xna.Framework.Rectangle frameRect;
+            if (_frameCount > _animationInterval && ((_previousFrameIsAttacked == false && IsAttacking) || _previousFrameIsAttacked))
+            {
+                _frameCount = 0;
+                if (_previousFrameIsAttacked == false && IsAttacking)
+                {
+                    //start attacking
+                    _previousFrameIsAttacked = true;
+                    NewAttackFrame();
+                }
+                else if (_previousFrameIsAttacked)
+                {
+                    _previousFrameIsAttacked = false;
+                    NewAttackFrame();
+                }
+                frameRect = GetFrame();
+                return frameRect;
+            }
+            frameRect = Microsoft.Xna.Framework.Rectangle.Empty;
             return frameRect;
         }
         private void NewAttackFrame()

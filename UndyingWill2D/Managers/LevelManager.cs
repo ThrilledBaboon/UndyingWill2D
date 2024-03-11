@@ -78,6 +78,7 @@ namespace UndyingWill2D.Managers
                 RoomManager enteredRoom = _rooms[_currentRoom.RoomOrigin + enteredRoomDirection];
                 enteredRoom.AddPlayer((PlayerController)doorCollisionData[0], enteredRoomDirection);
                 _currentRoom = enteredRoom;
+                _currentRoom.LoadContent();
             }
         }
     }

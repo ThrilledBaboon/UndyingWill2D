@@ -24,7 +24,7 @@ namespace UndyingWill2D.Managers
         List<TileController> _floors = new List<TileController>();
         List<TileController> _walls = new List<TileController>();
         List<DoorController> _doors = new List<DoorController> { };
-        List<EntityController> _entities = new List<EntityController>();
+        List<MobController> _mobs = new List<MobController>();
         List<Vector2> _childDirections = new List<Vector2>();
         //List<Vector2> _wallsWhereDoorsCouldntBe = new List<Vector2> { new Vector2(0, -1), new Vector2(0, 1), new Vector2(-1, 0), new Vector2(1, 0) };
         List<Vector2> _whereDoorsCouldBe = new List<Vector2> { new Vector2(0, -1), new Vector2(0, 1), new Vector2(-1, 0), new Vector2(1, 0) };
@@ -96,11 +96,11 @@ namespace UndyingWill2D.Managers
             _floors = new List<TileController>();
             CreateFloor();
             CreateWalls();
-            CreateEntities();
+            CreateMobs();
         }
         public void LoadContent()
         {
-            foreach (EntityController entity in _entities)
+            foreach (EntityController entity in _mobs)
             {
                 entity.LoadContent();
             }
@@ -111,10 +111,6 @@ namespace UndyingWill2D.Managers
         }
         public void Update()
         {
-            foreach (EntityController entity in _entities)
-            {
-                entity.Update(_roomHeight, _roomLength);
-            }
             if (_player != null)
             {
                 _player.Update(_roomHeight, _roomLength);
@@ -129,6 +125,11 @@ namespace UndyingWill2D.Managers
                     foreach (DoorController door in _doors)
                     { door.OpenDoor(); }
                 }
+            }
+            foreach (MobController entity in _mobs)
+            {
+                entity.Update(_roomHeight, _roomLength);
+                entity.MobMovement(_player.Collision, _player.RoomPosition);
             }
         }
         public void Draw(SpriteBatch spriteBatch)
@@ -151,15 +152,25 @@ namespace UndyingWill2D.Managers
                     door.Draw(spriteBatch);
                 }
             }
-            foreach (EntityController entity in _entities)
+            foreach (MobController mob in _mobs)
             {
-                entity.ActualPosition = RoomGridToWorldCoordinatesMap(entity);
-                entity.Draw(spriteBatch);
+                mob.ActualPosition = RoomGridToWorldCoordinatesMap(mob);
+                ItemController item = mob.Draw(spriteBatch);
+                if (item != null)
+                {
+                    item.ActualPosition = RoomGridToWorldCoordinatesMap(item);
+                    item.Draw(spriteBatch);
+                }
             }
             if (_player != null)
             {
                 _player.ActualPosition = RoomGridToWorldCoordinatesMap(_player);
-                _player.Draw(spriteBatch);
+                ItemController item =_player.Draw(spriteBatch);
+                if (item != null)
+                {
+                    item.ActualPosition = RoomGridToWorldCoordinatesMap(item);
+                    item.Draw(spriteBatch);
+                }
             }
         }
         //Other Methods
@@ -231,7 +242,7 @@ namespace UndyingWill2D.Managers
                 }
             }
         }
-        private void CreateEntities() 
+        private void CreateMobs() 
         {
             List<Vector2> possibleEnemySpawnLocation = 
                 new List<Vector2>()
@@ -248,8 +259,9 @@ namespace UndyingWill2D.Managers
             {
                 int enemiesSpawnLocationIndex = _random.Next(possibleEnemySpawnLocation.Count - 1);
                 Vector2 enemiesSpawnLocation = possibleEnemySpawnLocation[enemiesSpawnLocationIndex];
+                possibleEnemySpawnLocation.Remove(enemiesSpawnLocation);
                 MobController enemy = new MobController(_enemy, 90, enemiesSpawnLocation, _contentManager);
-                _entities.Add(enemy);
+                _mobs.Add(enemy);
             }
 
         }
