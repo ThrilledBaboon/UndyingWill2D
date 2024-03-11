@@ -49,6 +49,23 @@ namespace UndyingWill2D.Controllers
                         RoomPosition = new Vector2 (swordX, swordY);
                         break;
                 }
+                Vector2 itemPosition = ActualPosition;
+                if (itemPosition.X <= 7)
+                {
+                    itemPosition.X = ActualPosition.X + 50 * -(7 - itemPosition.X);
+                }
+                else if (itemPosition.X <= 15)
+                {
+                    itemPosition.X = ActualPosition.X + 50 * (itemPosition.X - 7);
+                }
+                if (itemPosition.Y <= 5)
+                {
+                    itemPosition.Y = ActualPosition.Y + 50 * -(5 - itemPosition.Y);
+                }
+                else if (itemPosition.Y <= 11)
+                {
+                    itemPosition.Y = ActualPosition.Y + 50 * (itemPosition.Y - 5);
+                }
                 return new Rectangle((int)ActualPosition.X, (int)ActualPosition.Y, _scale, _scale);
             } 
         }
@@ -68,16 +85,15 @@ namespace UndyingWill2D.Controllers
         {
             RoomPosition = OwnerPosition;
             _itemAnimationManager.Update(isAttacking);
-            _mouseDirection = MouseDirectionFromPlayer ;
+            _mouseDirection = MouseDirectionFromPlayer;
+            _frameRectangle = _itemAnimationManager.NextFrameRect;
         }
         public override void Draw(SpriteBatch spriteBatch)
         {
-            _frameRectangle = _itemAnimationManager.NextFrameRect;
             if (!_frameRectangle.IsEmpty) 
-            { 
+            {
                 spriteBatch.Draw(_texture, Rectangle, _frameRectangle, Color.White);
             }
         }
-            
     }
 }
