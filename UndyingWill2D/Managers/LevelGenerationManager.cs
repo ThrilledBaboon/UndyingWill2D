@@ -31,7 +31,7 @@ namespace UndyingWill2D.Managers
         public Dictionary<Vector2, RoomManager> LevelGeneration()
         {
             Dictionary<Vector2, RoomManager> dictionaryOfRooms;
-            int maxNumberOfRooms = 25;
+            int maxNumberOfRooms = 10000;
             RoomManager previousRoom = null;
             RoomManager parentRoom = null;
             dictionaryOfRooms = new Dictionary<Vector2, RoomManager>();

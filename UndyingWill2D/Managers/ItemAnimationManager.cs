@@ -17,49 +17,47 @@ namespace UndyingWill2D.Managers
     public class ItemAnimationManager : AnimationManager
     {
         bool _previousFrameIsAttacked = false;
+        int _attackCounter = 0;
         //Properties
-        protected bool IsAttacking { get; set; }
+        public bool IsAttacking { get; set; }
         public Microsoft.Xna.Framework.Rectangle NextFrameRect { get; set; }
         //Contructor
         public ItemAnimationManager(int numberOfFrames, int numberOfColumns, Microsoft.Xna.Framework.Vector2 spriteResolution, int startColumn) : 
         base(numberOfFrames, numberOfColumns, spriteResolution, startColumn)
         { _animationInterval = 15; }
         //Core Methods
-        public void Update(bool isAttacking)
+        public void Update()
         {
-            _frameCount+=5;
-            IsAttacking = isAttacking;
-            if (_frameCount > _animationInterval)
+            _frameCount++;
+            if ((_frameCount > _animationInterval) || (_previousFrameIsAttacked == false && IsAttacking))
             {
                 _frameCount = 0;
-                if (_previousFrameIsAttacked == false && IsAttacking)
+                _currentFrame++;
+                if (_currentFrame <= _numberOfFrames)
                 {
-                    //start attack
-                    _previousFrameIsAttacked = true;
-                    NewAttackFrame();
-                }
-                else if (_previousFrameIsAttacked)
-                {
-                    //continue attack
-                    _previousFrameIsAttacked = false;
-                    NewAttackFrame();
+                    if (_previousFrameIsAttacked == false && IsAttacking)
+                    {
+                        _attackCounter += 1;
+                        _previousFrameIsAttacked = true;
+                        NewAttackFrame();
+                    }
+                    else if (_previousFrameIsAttacked)
+                    {
+                        _previousFrameIsAttacked = false;
+                        NewAttackFrame();
+                    }
                 }
                 else
                 {
-                    NextFrameRect = Microsoft.Xna.Framework.Rectangle.Empty;
-                    return;
+                    _currentFrame = 0;
+                    ResetAnimation();
                 }
                 NextFrameRect = GetFrame();
             }
         }
         private void NewAttackFrame()
         {
-            _currentFrame++;
             _columnPosition++;
-            if (_currentFrame >= _numberOfFrames)
-            {
-                ResetAnimation();
-            }
             if (_columnPosition >= _numberOfColumns)
             {
                 _columnPosition = 0;

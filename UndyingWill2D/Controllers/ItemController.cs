@@ -84,7 +84,7 @@ namespace UndyingWill2D.Controllers
             switch (_type)
             {
                 case "Sword":
-                    _itemAnimationManager = new ItemAnimationManager(2, 2, new Vector2(32, 32), 1);
+                    _itemAnimationManager = new ItemAnimationManager(2, 2, new Vector2(32, 32), 0);
                     break;
             }
         }
@@ -92,7 +92,8 @@ namespace UndyingWill2D.Controllers
         public void Update(Vector2 OwnerPosition, bool isAttacking, Vector2 MouseDirectionFromPlayer)
         {
             RoomPosition = OwnerPosition;
-            _itemAnimationManager.Update(isAttacking);
+            _itemAnimationManager.IsAttacking = isAttacking;
+            _itemAnimationManager.Update();
             _mouseDirection = MouseDirectionFromPlayer;
             _frameRectangle = _itemAnimationManager.NextFrameRect;
         }
