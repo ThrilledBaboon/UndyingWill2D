@@ -29,7 +29,8 @@ namespace UndyingWill2D.Managers
         public void Update()
         {
             _frameCount++;
-            if ((_frameCount > _animationInterval) || (_previousFrameIsAttacked == false && IsAttacking))
+            if ((_frameCount > _animationInterval) || 
+                (_previousFrameIsAttacked == false && IsAttacking))
             {
                 _frameCount = 0;
                 _currentFrame++;

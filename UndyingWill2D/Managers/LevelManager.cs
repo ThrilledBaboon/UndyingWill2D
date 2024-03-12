@@ -22,7 +22,6 @@ namespace UndyingWill2D.Managers
         PlayerController _player;
         Texture2D _playerAnimation;
         //Room Fields
-        Vector2 _currentRoomOrigin;
         RoomManager _currentRoom;
         Dictionary<Vector2, RoomManager> _rooms;
         //Other Fields
@@ -38,15 +37,12 @@ namespace UndyingWill2D.Managers
         public void Initialise()
         {
             LevelGeneration();
-            foreach (var room in _rooms)
-            {
-                RoomManager actualRoom = room.Value;
-                actualRoom.Initialise();
-            }
+            Debug.WriteLine(_rooms.Count);
+            Vector2 currentRoomOrigin = new Vector2(0, 0);
+            _currentRoom = _rooms[currentRoomOrigin];
+            _currentRoom.Initialise();
             _playerAnimation = _contentManager.Load<Texture2D>("PlayerAnimation");
             _player = new PlayerController(_playerAnimation, 90, new Vector2(0, 0), _contentManager);
-            _currentRoomOrigin = new Vector2(0, 0);
-            _currentRoom = _rooms[_currentRoomOrigin];
             _currentRoom.AddPlayer(_player, new Vector2(0, 0));
         }
         public void LoadContent()
@@ -78,6 +74,7 @@ namespace UndyingWill2D.Managers
                 RoomManager enteredRoom = _rooms[_currentRoom.RoomOrigin + enteredRoomDirection];
                 enteredRoom.AddPlayer((PlayerController)doorCollisionData[0], enteredRoomDirection);
                 _currentRoom = enteredRoom;
+                _currentRoom.Initialise();
                 _currentRoom.LoadContent();
             }
         }

@@ -51,7 +51,6 @@ namespace UndyingWill2D.Controllers
             _heldItem.Update(RoomPosition, _isAttacking, MouseDirection);
             _timeSinceLastDash++;
             _timeSinceLastAttack++;
-            _timeSinceLastSwitchHotBar++;
         }
         //Other Methods
         public void HandleInput()
@@ -82,23 +81,11 @@ namespace UndyingWill2D.Controllers
             }
             if (_timeSinceLastAttack >= _attackColldown && mouseState.LeftButton == ButtonState.Pressed) 
             {
-                _timeSinceLastAttack = 0f;
-                _isAttacking = true;
-                _previouslyAttacking = true;
-                _mousePoint = mouseState.Position;
-                CalculateMousePointToMouseDirectionFromPlayer();
+                OnAttack(mouseState.Position);
             }
             if (_timeSinceLastDash >= _dashColldown && keyboardState.IsKeyDown(Keys.LeftShift)) 
             {
-                _timeSinceLastDash = 0f;
                 OnDash(_moveDirection);
-            }
-            if (_timeSinceLastSwitchHotBar >= _switchHotBarColldown)
-            {
-                if (keyboardState.IsKeyDown(Keys.D1))
-                {
-                    ChangeHotBarItem(0);
-                }
             }
             if (keyboardState.IsKeyDown(Keys.F))
             {
@@ -106,7 +93,14 @@ namespace UndyingWill2D.Controllers
             }
             OnMove(_moveDirection, _moveSpeed);
         }
-
+        private void OnAttack(Point position)
+        {
+            _timeSinceLastAttack = 0f;
+            _isAttacking = true;
+            _previouslyAttacking = true;
+            _mousePoint = position;
+            CalculateMousePointToMouseDirectionFromPlayer();
+        }
         private void CalculateMousePointToMouseDirectionFromPlayer()
         {
             Vector2 mouseVector = new Vector2(_mousePoint.X, _mousePoint.Y);
@@ -127,7 +121,6 @@ namespace UndyingWill2D.Controllers
             }
             MouseDirection.Normalize();
         }
-
         public override void OnMove(Vector2 moveDirection, float moveSpeed)
         {
             if (moveDirection == Vector2.Zero) { IsMoving = false; }
@@ -152,11 +145,8 @@ namespace UndyingWill2D.Controllers
         }
         public void OnDash(Vector2 _moveDirection)
         {
+            _timeSinceLastDash = 0f;
             OnMove(_moveDirection, _dashSpeed);
-        }
-        public void ChangeHotBarItem(int index)
-        {
-            _heldItem = _hotBar[index];
         }
         public void OnInteract()
         {
