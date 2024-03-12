@@ -30,7 +30,7 @@ namespace UndyingWill2D.Controllers
         float _attackColldown = 45f;
         //Property
         public int Stamina { get; set; }
-        public Rectangle collisionRectangle
+        public Rectangle CollisionRectangle
         {
             get
             {
