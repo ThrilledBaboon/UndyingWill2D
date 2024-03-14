@@ -43,24 +43,22 @@ namespace UndyingWill2D.Controllers
                 IsMoving = false; 
             }
             WalkAnimationManager.Update(IsMoving);
-            if (IsMoving) 
+            if (IsMoving == false) { return; }
+            if (_moveDirection != Vector2.Zero)
             {
-                if (_moveDirection != Vector2.Zero)
-                {
-                    _moveDirection.Normalize();
-                }
-                Vector2 moveVelocity = _moveDirection / 14 * _moveSpeed;
-                Vector2 currentRoomPosition = RoomPosition;
-                Vector2 roomArea = new Vector2(_roomLength, _roomHeight);
-                Vector2 positionToMoveTo = currentRoomPosition + moveVelocity;
-                bool isMovePossible = (0 <= positionToMoveTo.X &&
-                    positionToMoveTo.X <= roomArea.X)
-                    && (0 <= positionToMoveTo.Y &&
-                    positionToMoveTo.Y <= roomArea.Y);
-                if (isMovePossible)
-                {
-                    RoomPosition += moveVelocity;
-                }
+                _moveDirection.Normalize();
+            }
+            Vector2 moveVelocity = _moveDirection / 14 * _moveSpeed;
+            Vector2 currentRoomPosition = RoomPosition;
+            Vector2 roomArea = new Vector2(_roomLength, _roomHeight);
+            Vector2 positionToMoveTo = currentRoomPosition + moveVelocity;
+            bool isMovePossible = (0 <= positionToMoveTo.X &&
+                positionToMoveTo.X <= roomArea.X)
+                && (0 <= positionToMoveTo.Y &&
+                positionToMoveTo.Y <= roomArea.Y);
+            if (isMovePossible)
+            {
+                RoomPosition += moveVelocity;
             }
         }
     }
