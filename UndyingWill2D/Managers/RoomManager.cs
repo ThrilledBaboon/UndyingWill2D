@@ -46,6 +46,7 @@ namespace UndyingWill2D.Managers
         Random _random = new Random();
         int? _numberOfMaxChildren;
         PlayerController _player;
+        bool _isPlayerHasBeenToRoom;
         //Properties
         public Vector2 RoomOrigin {  get; set; }
         public List<Vector2> ChildDirections
@@ -83,20 +84,23 @@ namespace UndyingWill2D.Managers
         //Core Methods
         public void Initialise() 
         {
-            _floorTile = _contentManager.Load<Texture2D>("FloorTile");
-            _topWallTile = _contentManager.Load<Texture2D>("TopWall");
-            _leftSideWallTile = _contentManager.Load<Texture2D>("LeftSideWall");
-            _rightSideWallTile = _contentManager.Load<Texture2D>("RightSideWall");
-            _bottomWallTile = _contentManager.Load<Texture2D>("BottomWall");
-            _topDoorTile = _contentManager.Load<Texture2D>("TopDoor");
-            _leftSideDoorTile = _contentManager.Load<Texture2D>("LeftSideDoor");
-            _rightSideDoorTile = _contentManager.Load<Texture2D>("RightSideDoor");
-            _bottomDoorTile = _contentManager.Load<Texture2D>("BottomDoor");
-            _enemy = _contentManager.Load<Texture2D>("SkeletonAnimation");
-            _floors = new List<TileController>();
-            CreateFloor();
-            CreateWalls();
-            CreateMobs();
+            if (_isPlayerHasBeenToRoom == false) 
+            {
+                _floorTile = _contentManager.Load<Texture2D>("FloorTile");
+                _topWallTile = _contentManager.Load<Texture2D>("TopWall");
+                _leftSideWallTile = _contentManager.Load<Texture2D>("LeftSideWall");
+                _rightSideWallTile = _contentManager.Load<Texture2D>("RightSideWall");
+                _bottomWallTile = _contentManager.Load<Texture2D>("BottomWall");
+                _topDoorTile = _contentManager.Load<Texture2D>("TopDoor");
+                _leftSideDoorTile = _contentManager.Load<Texture2D>("LeftSideDoor");
+                _rightSideDoorTile = _contentManager.Load<Texture2D>("RightSideDoor");
+                _bottomDoorTile = _contentManager.Load<Texture2D>("BottomDoor");
+                _enemy = _contentManager.Load<Texture2D>("SkeletonAnimation");
+                _floors = new List<TileController>();
+                CreateFloor();
+                CreateWalls();
+                CreateMobs();
+            }
         }
         public void LoadContent()
         {
@@ -410,6 +414,7 @@ namespace UndyingWill2D.Managers
         //Player Related Methods
         public void AddPlayer(PlayerController player, Vector2 enteredRoomDirection)
         {
+            _isPlayerHasBeenToRoom = true;
             Vector2 DirectionOfDoorEnteredThrough = enteredRoomDirection + new Vector2(0, 0);
             String positionString = DirectionOfDoorEnteredThrough.X.ToString() + ", " + DirectionOfDoorEnteredThrough.Y.ToString();
             switch (positionString)
