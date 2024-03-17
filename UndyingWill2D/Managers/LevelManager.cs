@@ -44,9 +44,6 @@ namespace UndyingWill2D.Managers
             _playerAnimation = _contentManager.Load<Texture2D>("PlayerAnimation");
             _player = new PlayerController(_playerAnimation, 90, new Vector2(0, 0), _contentManager);
             _currentRoom.AddPlayer(_player, new Vector2(0, 0));
-        }
-        public void LoadContent()
-        {
             _currentRoom.LoadContent();
         }
         public void Update()
