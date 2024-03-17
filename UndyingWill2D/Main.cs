@@ -42,7 +42,6 @@ namespace UndyingWill2D
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-            _level.LoadContent();
             base.LoadContent();
         }
         protected override void Update(GameTime gameTime)
